@@ -1,4 +1,4 @@
-#=require jquery.ui.all
+#=require jquery-ui
 
 class Backbone.Widgets.SuggestionsForInput extends Backbone.View
   initialize: (options) ->

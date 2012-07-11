@@ -1,5 +1,3 @@
-#=require antykwariusz
-#=require jquery-ui
 
 class Antykwariusz.Suggestions extends Backbone.Collection
   initialize: (options) ->
