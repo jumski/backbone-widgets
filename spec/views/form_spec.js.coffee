@@ -16,6 +16,7 @@ describe 'Backbone.Widgets.Form', ->
   #   Backbone.Widgets.SuggestionsForInput::render = oldRender
 
   DummyModel = Backbone.Model.extend
+    url: 'dummy_url'
     schema:
       title:
         type: 'Text'
@@ -42,3 +43,59 @@ describe 'Backbone.Widgets.Form', ->
     it 'passes options', ->
       expect(@button.label).toEqual @buttonOptions.label
       expect(@button.loadingLabel).toEqual @buttonOptions.loadingLabel
+
+  describe 'saveIfValid', ->
+    beforeEach ->
+      @disableSpy = sinon.spy(@form.button, 'disable')
+      @enableSpy = sinon.spy(@form.button, 'enable')
+
+    afterEach ->
+      @form.commit.restore()
+      @form.model.on.restore()
+      @form.model.save.restore()
+      @form.button.disable.restore()
+      @form.button.enable.restore()
+
+    describe 'when form is valid', ->
+      beforeEach ->
+        sinon.stub(@form, 'commit').returns(null)
+        @onSpy   = sinon.spy(@form.model, 'on')
+        @saveSpy = sinon.spy(@form.model, 'save')
+        @event =
+          preventDefault: sinon.spy()
+          stopPropagation: sinon.spy()
+        @form.saveIfValid(@event)
+
+      it 'stops events propagation', ->
+        expect(@event.stopPropagation.called).toBeTruthy()
+
+      it 'prevents default', ->
+        expect(@event.preventDefault.called).toBeTruthy()
+
+      it 'disables the button', ->
+        expect(@disableSpy.called).toBeTruthy()
+
+      it 'binds button enable on model error', ->
+        expect(@onSpy.called).toBeTruthy()
+
+      it 'calls save with success callback', ->
+        expect(@saveSpy.called).toBeTruthy()
+
+    # describe 'when form is invalid', ->
+    #   beforeEach ->
+    #     sinon.stub(@form, 'commit').returns({error: 'message'})
+
+
+    #     @onSpy   = sinon.mock(@form.model, 'on')
+    #     @saveSpy = sinon.mock(@form.model, 'save')
+
+
+
+
+
+
+
+
+
+
+
