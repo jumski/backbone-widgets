@@ -1,7 +1,6 @@
-#=require antykwariusz
-#=require jquery-ui
+#=require jquery.ui.all
 
-class Antykwariusz.SuggestionsForInput extends Backbone.View
+class Backbone.Widgets.SuggestionsForInput extends Backbone.View
   initialize: (options) ->
     @itemRenderer = options.itemRenderer if options.itemRenderer
     @collection = options.collection

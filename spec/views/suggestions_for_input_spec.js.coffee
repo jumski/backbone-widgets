@@ -1,6 +1,6 @@
 #=require views/suggestions_for_input
 
-describe 'Antykwariusz.SuggestionsForInput', ->
+describe 'Backbone.Widgets.SuggestionsForInput', ->
   # loadFixtures 'suggestions_for_input.html'
   modelUrl = '/model_url'
   model = new Backbone.Model url: modelUrl
@@ -8,12 +8,12 @@ describe 'Antykwariusz.SuggestionsForInput', ->
   fixture = $('<div><input type="text" /></div>')
   input = $('input', fixture)
   itemRenderer = (ul, item) ->
-  view = new Antykwariusz.SuggestionsForInput
+  view = new Backbone.Widgets.SuggestionsForInput
     el: input, collection: collection, itemRenderer: itemRenderer
 
-  oldRender = Antykwariusz.SuggestionsForInput::render
+  oldRender = Backbone.Widgets.SuggestionsForInput::render
   afterEach ->
-    Antykwariusz.SuggestionsForInput::render = oldRender
+    Backbone.Widgets.SuggestionsForInput::render = oldRender
 
   describe '#render', ->
     it 'adds .has-suggestions class to input', ->
