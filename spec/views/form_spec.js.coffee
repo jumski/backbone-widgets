@@ -55,22 +55,25 @@ describe 'Backbone.Widgets.Form', ->
         stopPropagation: sinon.spy()
 
     afterEach ->
-      @form.commit.restore()
       @form.model.on.restore()
       @form.model.save.restore()
       @form.button.disable.restore()
       @form.button.enable.restore()
 
+    it 'stops events propagation', ->
+      @form.saveIfValid(@event)
+      expect(@event.stopPropagation.called).toBeTruthy()
+
+    it 'prevents default', ->
+      @form.saveIfValid(@event)
+      expect(@event.preventDefault.called).toBeTruthy()
+
     describe 'when form is valid', ->
       beforeEach ->
         sinon.stub(@form, 'commit').returns(null)
         @form.saveIfValid(@event)
-
-      it 'stops events propagation', ->
-        expect(@event.stopPropagation.called).toBeTruthy()
-
-      it 'prevents default', ->
-        expect(@event.preventDefault.called).toBeTruthy()
+      afterEach ->
+        @form.commit.restore()
 
       it 'disables the button', ->
         expect(@disableSpy.called).toBeTruthy()
@@ -88,12 +91,8 @@ describe 'Backbone.Widgets.Form', ->
       beforeEach ->
         sinon.stub(@form, 'commit').returns({error: 'message'})
         @form.saveIfValid(@event)
-
-      it 'stops events propagation', ->
-        expect(@event.stopPropagation.called).toBeTruthy()
-
-      it 'prevents default', ->
-        expect(@event.preventDefault.called).toBeTruthy()
+      afterEach ->
+        @form.commit.restore()
 
       it 'does not disable the button', ->
         expect(@disableSpy.called).toBeFalsy()
