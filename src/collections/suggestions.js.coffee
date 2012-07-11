@@ -1,5 +1,5 @@
 
-class Antykwariusz.Suggestions extends Backbone.Collection
+class Backbone.Widgets.Suggestions extends Backbone.Collection
   initialize: (options) ->
     @term = ' '
     @model = options.model
