@@ -1,7 +1,7 @@
 #=require views/suggestions_for_input
 
 describe 'Backbone.Widgets.SuggestionsForInput', ->
-  # loadFixtures 'suggestions_for_input.html'
+  loadFixtures 'backbone-widgets/suggestions_for_input'
   modelUrl = '/model_url'
   model = new Backbone.Model url: modelUrl
   collection = new Backbone.Collection model: model
