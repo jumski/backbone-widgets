@@ -48,6 +48,9 @@ describe 'Backbone.Widgets.Form', ->
     beforeEach ->
       @disableSpy = sinon.spy(@form.button, 'disable')
       @enableSpy = sinon.spy(@form.button, 'enable')
+      @event =
+        preventDefault: sinon.spy()
+        stopPropagation: sinon.spy()
 
     afterEach ->
       @form.commit.restore()
@@ -61,9 +64,6 @@ describe 'Backbone.Widgets.Form', ->
         sinon.stub(@form, 'commit').returns(null)
         @onSpy   = sinon.spy(@form.model, 'on')
         @saveSpy = sinon.spy(@form.model, 'save')
-        @event =
-          preventDefault: sinon.spy()
-          stopPropagation: sinon.spy()
         @form.saveIfValid(@event)
 
       it 'stops events propagation', ->
@@ -81,13 +81,13 @@ describe 'Backbone.Widgets.Form', ->
       it 'calls save with success callback', ->
         expect(@saveSpy.called).toBeTruthy()
 
-    # describe 'when form is invalid', ->
-    #   beforeEach ->
-    #     sinon.stub(@form, 'commit').returns({error: 'message'})
+    describe 'when form is invalid', ->
+      beforeEach ->
+        sinon.stub(@form, 'commit').returns({error: 'message'})
 
 
-    #     @onSpy   = sinon.mock(@form.model, 'on')
-    #     @saveSpy = sinon.mock(@form.model, 'save')
+        @onSpy   = sinon.mock(@form.model, 'on')
+        @saveSpy = sinon.mock(@form.model, 'save')
 
 
 
