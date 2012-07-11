@@ -60,48 +60,48 @@ describe 'Backbone.Widgets.Form', ->
       @form.button.disable.restore()
       @form.button.enable.restore()
 
-    it 'stops events propagation', ->
-      @form.saveIfValid(@event)
-      expect(@event.stopPropagation.called).toBeTruthy()
+    # it 'stops events propagation', ->
+    #   @form.saveIfValid(@event)
+    #   expect(@event.stopPropagation.called).toBeTruthy()
 
-    it 'prevents default', ->
-      @form.saveIfValid(@event)
-      expect(@event.preventDefault.called).toBeTruthy()
+  #   it 'prevents default', ->
+  #     @form.saveIfValid(@event)
+  #     expect(@event.preventDefault.called).toBeTruthy()
 
-    describe 'when form is valid', ->
-      beforeEach ->
-        sinon.stub(@form, 'commit').returns(null)
-        @form.saveIfValid(@event)
-      afterEach ->
-        @form.commit.restore()
+  #   describe 'when form is valid', ->
+  #     beforeEach ->
+  #       sinon.stub(@form, 'commit').returns(null)
+  #       @form.saveIfValid(@event)
+  #     afterEach ->
+  #       @form.commit.restore()
 
-      it 'disables the button', ->
-        expect(@disableSpy.called).toBeTruthy()
+  #     it 'disables the button', ->
+  #       expect(@disableSpy.called).toBeTruthy()
 
-      it 'binds button enable on model error', ->
-        expect(@onSpy.called).toBeTruthy()
-        expect(@onSpy.args[0][0]).toEqual 'error'
-        expect(@onSpy.args[0][1]).toEqual @form.button.enable
+  #     it 'binds button enable on model error', ->
+  #       expect(@onSpy.called).toBeTruthy()
+  #       expect(@onSpy.args[0][0]).toEqual 'error'
+  #       expect(@onSpy.args[0][1]).toEqual @form.button.enable
 
-      it 'calls save with success callback', ->
-        expect(@saveSpy.called).toBeTruthy()
-        expect(@saveSpy.args[0][0]).toEqual success: @form.button.enable
+  #     it 'calls save with success callback', ->
+  #       expect(@saveSpy.called).toBeTruthy()
+  #       expect(@saveSpy.args[0][0]).toEqual success: @form.button.enable
 
-    describe 'when form is invalid', ->
-      beforeEach ->
-        sinon.stub(@form, 'commit').returns({error: 'message'})
-        @form.saveIfValid(@event)
-      afterEach ->
-        @form.commit.restore()
+  #   describe 'when form is invalid', ->
+  #     beforeEach ->
+  #       sinon.stub(@form, 'commit').returns({error: 'message'})
+  #       @form.saveIfValid(@event)
+  #     afterEach ->
+  #       @form.commit.restore()
 
-      it 'does not disable the button', ->
-        expect(@disableSpy.called).toBeFalsy()
+  #     it 'does not disable the button', ->
+  #       expect(@disableSpy.called).toBeFalsy()
 
-      it 'does not binds anything on model', ->
-        expect(@onSpy.called).toBeFalsy()
+  #     it 'does not binds anything on model', ->
+  #       expect(@onSpy.called).toBeFalsy()
 
-      it 'does not call save on model', ->
-        expect(@saveSpy.called).toBeFalsy()
+  #     it 'does not call save on model', ->
+  #       expect(@saveSpy.called).toBeFalsy()
 
 
 
