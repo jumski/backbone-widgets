@@ -7,8 +7,9 @@ describe 'Antykwariusz.SuggestionsForInput', ->
   collection = new Backbone.Collection model: model
   fixture = $('<div><input type="text" /></div>')
   input = $('input', fixture)
+  itemRenderer = (ul, item) ->
   view = new Antykwariusz.SuggestionsForInput
-    el: input, collection: collection
+    el: input, collection: collection, itemRenderer: itemRenderer
 
   oldRender = Antykwariusz.SuggestionsForInput::render
   afterEach ->
@@ -32,6 +33,13 @@ describe 'Antykwariusz.SuggestionsForInput', ->
 
       view.render()
       mock.verify()
+
+    it 'sets _renderItem on autocomplete if options.itemRenderer provided', ->
+      autocomplete = {}
+      view.render()
+      data = input.data('autocomplete')
+
+      expect(data._renderItem).toEqual(itemRenderer)
 
     describe 'autocomplete settings', ->
       it 'minLenght should equal 3', ->

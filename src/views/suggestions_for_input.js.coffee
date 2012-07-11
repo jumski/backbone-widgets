@@ -3,13 +3,18 @@
 
 class Antykwariusz.SuggestionsForInput extends Backbone.View
   initialize: (options) ->
+    @itemRenderer = options.itemRenderer if options.itemRenderer
     @collection = options.collection
 
   render: =>
-    $(@el).addClass('has-suggestions').focus().autocomplete
+    autocomplete = $(@el).addClass('has-suggestions').focus().autocomplete({
       minLength: 3
       select: @selectCallback
       source: @sourceCallback
+    })
+
+    if @itemRenderer
+      autocomplete.data('autocomplete')._renderItem = @itemRenderer
 
   selectCallback: (event, ui) =>
     @trigger 'select', ui.item
@@ -20,12 +25,3 @@ class Antykwariusz.SuggestionsForInput extends Backbone.View
 
   createSuccessCallback: (response) ->
     success: => response(@collection.toJSON())
-
-
-
-    # capybara hack
-    # @$('.search input').data('autocomplete')._renderItem = (ul, item) =>
-    #   button = $('<li></li>')
-    #   button.data("item.autocomplete", item)
-    #         .append("<a href=\"#\">#{item.label}</a>")
-    #         .appendTo ul
