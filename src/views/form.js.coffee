@@ -1,28 +1,17 @@
 class Backbone.Widgets.Form extends Backbone.Form
-  baseEvents:
+  events:
     'click button' : 'saveIfValid'
 
   initialize: (options = {button: {}}) =>
     super(options)
-    @$button = new Backbone.Widgets.AnimatedButton options.button
-
-    # ugly custom hack for events hash inheritance
-    # this is not solved properly in backbone for now,
-    # only partial solutions exists,
-    # @see https://github.com/documentcloud/backbone/issues/244
-    # this way we can define "events" hash in sublasses as normal,
-    # and it will gets merged with our base class events
-    # there is a limitation tho - works only for one level of inheritance
-    @inheritedEvents = @events
-    @events = _(@baseEvents).extend(@inheritedEvents)
-    @delegateEvents()
+    @button = new Backbone.Widgets.AnimatedButton options.button
 
   render: ->
     super()
 
     # render commit button
     $container = $('<div class="form-actions"></div>')
-    $container.append @$button.render().el
+    $container.append @button.render().el
     @$el.find('fieldset').append $container
 
     # HACK!
@@ -41,6 +30,6 @@ class Backbone.Widgets.Form extends Backbone.Form
     # pass attributes to model and validate,
     # save unless we've got errors
     unless @commit()
-      @$button.disable()
-      @model.on 'error', @$button.enable
-      @model.save success: @$button.enable
+      @button.disable()
+      @model.on 'error', @button.enable
+      @model.save success: @button.enable
