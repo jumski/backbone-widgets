@@ -77,9 +77,12 @@ describe 'Backbone.Widgets.Form', ->
 
       it 'binds button enable on model error', ->
         expect(@onSpy.called).toBeTruthy()
+        expect(@onSpy.args[0][0]).toEqual 'error'
+        expect(@onSpy.args[0][1]).toEqual @form.button.enable
 
       it 'calls save with success callback', ->
         expect(@saveSpy.called).toBeTruthy()
+        expect(@saveSpy.args[0][0]).toEqual success: @form.button.enable
 
     describe 'when form is invalid', ->
       beforeEach ->
