@@ -1,5 +1,5 @@
 #=require jquery
-#=require jquery.ui.all
+#=require jquery-ui
 #=require underscore
 #=require backbone
 #=require support/sinon
