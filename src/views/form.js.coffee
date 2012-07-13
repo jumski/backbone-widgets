@@ -6,6 +6,10 @@ class Backbone.Widgets.Form extends Backbone.Form
     super(options)
     @button = new Backbone.Widgets.AnimatedButton options.button
 
+    if (@events)
+      @events = _.defaults(@events, Backbone.Widgets.Form.prototype.events)
+    @delegateEvents(@events)
+
   render: ->
     super()
 
