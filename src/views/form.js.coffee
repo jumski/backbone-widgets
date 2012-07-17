@@ -33,8 +33,6 @@ class Backbone.Widgets.Form extends Backbone.Form
 
     # pass attributes to model and validate,
     # save unless we've got errors
-    @model.on 'sync', ->
-      console.log 'asdf'
     unless @commit()
       @button.disable()
       @model.on 'error', @button.enable
