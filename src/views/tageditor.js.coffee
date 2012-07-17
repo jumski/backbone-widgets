@@ -47,6 +47,7 @@ class Backbone.Widgets.Tageditor extends Backbone.Form.editors.Base
     (_.map @tags, @renderTag).join(' ')
 
   renderTag: (tag) =>
+    return '' unless tag.length > 0
     "<li class='tag'>#{tag}</li>"
 
   clickTag: (event) =>
