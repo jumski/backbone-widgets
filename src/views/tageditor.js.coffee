@@ -8,6 +8,7 @@ class Backbone.Widgets.Tageditor extends Backbone.Form.editors.Base
     'click .tag' : 'clickTag'
     'keypress'   : 'interpretKeypress'
     'keydown'    : 'interpretKeydown'
+    'blur input' : 'addTag'
 
   initialize: (options) =>
     super(options)
