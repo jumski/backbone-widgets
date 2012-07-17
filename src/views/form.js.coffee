@@ -3,10 +3,14 @@ class Backbone.Widgets.Form extends Backbone.Form
     'click button' : 'saveIfValid'
 
   initialize: (options = {button: {}}) =>
+    # hack !
+    if @schema
+      options.schema = @schema
+
     super(options)
     @button = new Backbone.Widgets.AnimatedButton options.button
 
-    if (@events)
+    if @events
       @events = _.defaults(@events, Backbone.Widgets.Form.prototype.events)
     @delegateEvents(@events)
 
