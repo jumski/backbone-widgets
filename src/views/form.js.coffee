@@ -39,3 +39,12 @@ class Backbone.Widgets.Form extends Backbone.Form
       @button.disable()
       @model.on 'error', @button.enable
       @model.save success: @button.enable
+
+  ########################
+  # Validation shortcuts #
+  ########################
+  @validateLength: (min, max) ->
+    type: 'regexp'
+    regexp: new RegExp("^.{#{min},#{max}}$")
+    message: "Please provide between #{min} and #{max} characters"
+
