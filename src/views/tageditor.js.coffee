@@ -45,7 +45,7 @@ class Backbone.Widgets.Tageditor extends Backbone.Form.editors.Base
     @tags = _.map(value.split(','), jQuery.trim)
 
   renderTags: =>
-    (_.map @tags, @renderTag).join(' ')
+    _(@tags).reject((tag) -> tag == '').map(@renderTag).join(' ')
 
   renderTag: (tag) =>
     return '' unless tag.length > 0
