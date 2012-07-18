@@ -5,10 +5,10 @@ class Backbone.Widgets.Tageditor extends Backbone.Form.editors.Base
   defaultValue: ''
 
   events:
-    'click .tag' : 'clickTag'
-    'keypress'   : 'interpretKeypress'
-    'keydown'    : 'interpretKeydown'
-    'blur input' : 'addTag'
+    'click .tag'     : 'onTagClick'
+    'keypress input' : 'onInputKeypress'
+    'keydown input'  : 'onInputKeydown'
+    'blur input'     : 'onInputBlur'
 
   initialize: (options) =>
     super(options)
@@ -43,8 +43,8 @@ class Backbone.Widgets.Tageditor extends Backbone.Form.editors.Base
     @$suggestions.on 'select', (event, item) =>
       event.preventDefault()
       event.stopPropagation()
-      # console.log 'a'
-      # @addTag item.value
+      @$input.val('').focus()
+      @addTag item.value
 
     @$suggestions.render()
 
@@ -52,12 +52,33 @@ class Backbone.Widgets.Tageditor extends Backbone.Form.editors.Base
     @$el.append @$input
     @
 
+  # event handlers
+  onTagClick: (event) =>
+    $tag = $(event.target)
+    @removeTag($tag.text())
+
+  onInputBlur: (event) =>
+    return if @$suggestions.isSuggesting()
+    unless @$input.val() == ''
+      @addTag @sanitizedInputValue()
+
+  onInputKeypress: (event) =>
+    if event.charCode == 44 || event.charCode == 13 # , or <CR>
+      @addTag @sanitizedInputValue()
+      event.preventDefault()
+
+  onInputKeydown: (event) =>
+    if @$input.val() == '' && event.keyCode == 8 # backspace
+      @removeLastTag()
+
+  # backbone form interface
   getValue: =>
     @filteredTags().join(', ')
 
   setValue: (value) =>
     @tags = _.map(value.split(','), jQuery.trim)
 
+  # instance methods
   renderTags: =>
     _.map(@filteredTags(), @renderTag).join(' ')
 
@@ -66,10 +87,6 @@ class Backbone.Widgets.Tageditor extends Backbone.Form.editors.Base
 
   renderTag: (tag) =>
     "<li class='tag'>#{tag}</li>"
-
-  clickTag: (event) =>
-    $tag = $(event.target)
-    @removeTag($tag.text())
 
   removeTag: (tag) =>
     @tags = _.without(@tags, tag)
@@ -80,25 +97,17 @@ class Backbone.Widgets.Tageditor extends Backbone.Form.editors.Base
   removeLastTag: (event) =>
     @removeTag _.last(@tags)
 
-  addTag: =>
-    value = @sanitizeValue @$input.val()
+  addTag: (value) =>
     if value && !@hasTag(value)
       @tags.push value
       @render()
       @$input.val('').focus()
+
+  sanitizedInputValue: =>
+    @sanitizeValue @$input.val()
 
   hasTag: (value) =>
     jQuery.inArray(value, @tags) >= 0
 
   sanitizeValue: (value) =>
     value.toLowerCase().replace(/[^a-z0-9 ]/g, '')
-
-  interpretKeypress: (event) =>
-    if event.charCode == 44 || event.charCode == 13 # , or <CR>
-      @addTag()
-      event.preventDefault()
-
-  interpretKeydown: (event) =>
-    if @$input.val() == '' && event.keyCode == 8 # backspace
-      @removeLastTag()
-

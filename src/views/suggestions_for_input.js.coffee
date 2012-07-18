@@ -6,11 +6,14 @@ class Backbone.Widgets.SuggestionsForInput extends Backbone.View
     @collection = options.collection
 
   render: =>
-    autocomplete = $(@el).addClass('has-suggestions').focus().autocomplete({
+    options =
       minLength: 3
       select: @selectCallback
       source: @sourceCallback
-    })
+      close: => @suggesting = false
+      open: => @suggesting = true
+
+    autocomplete = $(@el).addClass('has-suggestions').focus().autocomplete(options)
 
     if @itemRenderer
       autocomplete.data('autocomplete')._renderItem = @itemRenderer
@@ -26,3 +29,5 @@ class Backbone.Widgets.SuggestionsForInput extends Backbone.View
 
   createSuccessCallback: (response) ->
     => response(@collection.toJSON())
+
+  isSuggesting: => @suggesting
