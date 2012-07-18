@@ -40,6 +40,12 @@ class Backbone.Widgets.Tageditor extends Backbone.Form.editors.Base
     # render SuggestionsForInput
     @$suggestions = new Backbone.Widgets.SuggestionsForInput
       el: @$input, collection: @collection
+    @$suggestions.on 'select', (event, item) =>
+      event.preventDefault()
+      event.stopPropagation()
+      # console.log 'a'
+      # @addTag item.value
+
     @$suggestions.render()
 
     @$el.append @$tagsList

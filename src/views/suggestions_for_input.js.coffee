@@ -16,7 +16,7 @@ class Backbone.Widgets.SuggestionsForInput extends Backbone.View
       autocomplete.data('autocomplete')._renderItem = @itemRenderer
 
   selectCallback: (event, ui) =>
-    @trigger 'select', ui.item
+    @trigger 'select', event, ui.item
 
   sourceCallback: (request, response) =>
     @collection.fetch
