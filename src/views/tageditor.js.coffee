@@ -13,6 +13,9 @@ class Backbone.Widgets.Tageditor extends Backbone.Form.editors.Base
   initialize: (options) =>
     super(options)
 
+    if options.schema.collection?
+      @collection = options.schema.collection
+
     @setValue(@value)
 
     @$tagsList = $('<ul> </ul>').addClass('tageditor').hide()
@@ -33,6 +36,11 @@ class Backbone.Widgets.Tageditor extends Backbone.Form.editors.Base
       width = @$tagsList.width()
 
     @$input.css 'padding-left', width + 7
+
+    # render SuggestionsForInput
+    @$suggestions = new Backbone.Widgets.SuggestionsForInput
+      el: @$input, collection: @collection
+    @$suggestions.render()
 
     @$el.append @$tagsList
     @$el.append @$input

@@ -19,8 +19,10 @@ class Backbone.Widgets.SuggestionsForInput extends Backbone.View
     @trigger 'select', ui.item
 
   sourceCallback: (request, response) =>
-    @collection.setTerm request.term
-    @collection.fetch @createSuccessCallback(response)
+    @collection.fetch
+      data:
+        term: request.term
+      success: @createSuccessCallback(response)
 
   createSuccessCallback: (response) ->
-    success: => response(@collection.toJSON())
+    => response(@collection.toJSON())
