@@ -2,7 +2,7 @@
 
 class Backbone.Widgets.FileUploadInput extends Backbone.View
   tagName: 'input'
-  className: 'file-upload'
+  className: 'file-upload btn'
   attributes:
     multiple: 'multiple'
     type: 'file'
