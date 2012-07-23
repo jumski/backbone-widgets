@@ -28,6 +28,5 @@ class Backbone.Widgets.FileUploadInput extends Backbone.View
     # proxy events
     @$el.on 'fileuploadadd', (event, data) =>
       @trigger 'add', event, data
-      # @$el.trigger('submit')
 
     @
