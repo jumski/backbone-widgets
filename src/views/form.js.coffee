@@ -21,14 +21,6 @@ class Backbone.Widgets.Form extends Backbone.Form
     $container = $('<div class="form-actions"></div>')
     $container.append @button.render().el
     @$el.find('fieldset').append $container
-
-    # HACK!
-    # copy helps as placeholders
-    @$el.find('.help-block').each (index, element) ->
-      help = $(element).text()
-      $field = $(element).siblings('.input-xlarge').find('input, textarea')
-      $field.attr('placeholder', help)
-
     @
 
   saveIfValid: (event) =>
@@ -48,5 +40,5 @@ class Backbone.Widgets.Form extends Backbone.Form
   @validateLength: (min, max) ->
     type: 'regexp'
     regexp: new RegExp("^.{#{min},#{max}}$")
-    message: "Please provide between #{min} and #{max} characters"
+    message: I18n.t('validaton_errors.length', {min: min, max: max})
 
