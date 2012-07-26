@@ -1,23 +1,32 @@
 #= require jquery.fileupload
 
-class Backbone.Widgets.FileUploadInput extends Backbone.Form.editors.Base
+class Backbone.Widgets.PictureUpload extends Backbone.Form.editors.Base
   tagName: 'div'
-  className: 'file-upload'
+  className: 'picture-upload'
 
   initialize: (options) =>
     super(options)
+
+    @model = options.schema.model
+    @model.on 'change', @updatePicture
 
     @setValue(@value)
 
   # backbone form interface
   getValue: =>
-    'hax'
+    @model.get('url')
 
   setValue: (value) =>
-    console.log value
+    @model.set('url', value)
+
+  updatePicture: =>
+    if url = @model.get('thumb_url')
+      @$el.find('img').attr('src', url).show()
+    else
+      @$el.find('img').attr('src', '').hide()
 
   render: =>
-    @$el.html HandlebarsTemplates['file_upload']()
+    @$el.html HandlebarsTemplates['picture_upload'](@model.toJSON())
 
     type = if @model.id
              'put'
@@ -36,6 +45,7 @@ class Backbone.Widgets.FileUploadInput extends Backbone.Form.editors.Base
     # initialize
     @$el.find('input').fileupload(opts)
         .on 'fileuploadadd', (event, data) =>
-          @trigger 'add', event, data
+          # @model.set(data.result)
+          # @$el.find('img').attr('src', data.result.thumb_url)
 
     @
