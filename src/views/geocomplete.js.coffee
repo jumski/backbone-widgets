@@ -6,6 +6,9 @@ class Backbone.Widgets.Geocomplete extends Backbone.Form.editors.Base
   attributes:
     style: 'width: 600px'
 
+  formatted_address: null
+  geocodes: {}
+
   initialize: (options) =>
     super(options)
 
@@ -13,10 +16,10 @@ class Backbone.Widgets.Geocomplete extends Backbone.Form.editors.Base
 
   # backbone form interface
   getValue: =>
-    @$el.val()
+    @geocodes
 
   setValue: (value) =>
-    @$el.val(value)
+    @formatted_address = value
 
   # view methods
   render: =>
@@ -24,11 +27,18 @@ class Backbone.Widgets.Geocomplete extends Backbone.Form.editors.Base
 
     @$el.find('input.geocomplete').geocomplete
       map: @$el.find('.map-canvas')
-      # location: 'NYC'
+      location: @formatted_address
     @$el.on 'geocode:result', (event, result) =>
-      console.log result
-      console.log result.formatted_address
-      console.log result.geometry.location.$a
-      console.log result.geometry.location.ab
+      @geocodes =
+        formatted_address: result.formatted_address
+        latitude: result.geometry.location.$a
+        longitude: result.geometry.location.ab
+
+      console.log @geocodes
+
+      # console.log result
+      # console.log result.formatted_address
+      # console.log result.geometry.location.$a
+      # console.log result.geometry.location.ab
 
     @
