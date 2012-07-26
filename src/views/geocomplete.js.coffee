@@ -27,5 +27,8 @@ class Backbone.Widgets.Geocomplete extends Backbone.Form.editors.Base
       # location: 'NYC'
     @$el.on 'geocode:result', (event, result) =>
       console.log result
+      console.log result.formatted_address
+      console.log result.geometry.location.$a
+      console.log result.geometry.location.ab
 
     @
