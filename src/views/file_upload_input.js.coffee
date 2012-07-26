@@ -1,13 +1,24 @@
 #= require jquery.fileupload
 
-class Backbone.Widgets.FileUploadInput extends Backbone.View
-  tagName: 'input'
-  className: 'file-upload btn'
-  attributes:
-    multiple: 'multiple'
-    type: 'file'
+class Backbone.Widgets.FileUploadInput extends Backbone.Form.editors.Base
+  tagName: 'div'
+  className: 'file-upload'
+
+  initialize: (options) =>
+    super(options)
+
+    @setValue(@value)
+
+  # backbone form interface
+  getValue: =>
+    'hax'
+
+  setValue: (value) =>
+    console.log value
 
   render: =>
+    @$el.html HandlebarsTemplates['file_upload']()
+
     type = if @model.id
              'put'
            else
@@ -23,10 +34,8 @@ class Backbone.Widgets.FileUploadInput extends Backbone.View
         @trigger 'done', event, data
 
     # initialize
-    @$el.fileupload opts
-
-    # proxy events
-    @$el.on 'fileuploadadd', (event, data) =>
-      @trigger 'add', event, data
+    @$el.find('input').fileupload(opts)
+        .on 'fileuploadadd', (event, data) =>
+          @trigger 'add', event, data
 
     @
