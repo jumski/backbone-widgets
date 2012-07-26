@@ -21,8 +21,10 @@ class Backbone.Widgets.PictureUpload extends Backbone.Form.editors.Base
 
   updatePicture: =>
     if url = @model.get('thumb_url')
+      console.log url
       @$el.find('img').attr('src', url).show()
     else
+      console.log 'nono'
       @$el.find('img').attr('src', '').hide()
 
   render: =>
@@ -40,12 +42,9 @@ class Backbone.Widgets.PictureUpload extends Backbone.Form.editors.Base
       paramName: paramName
       limitMultiFileUploads: 1
       done: (event, data) =>
-        @trigger 'done', event, data
+        @model.set(data.result)
 
     # initialize
     @$el.find('input').fileupload(opts)
-        .on 'fileuploadadd', (event, data) =>
-          # @model.set(data.result)
-          # @$el.find('img').attr('src', data.result.thumb_url)
 
     @
