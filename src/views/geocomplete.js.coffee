@@ -25,5 +25,7 @@ class Backbone.Widgets.Geocomplete extends Backbone.Form.editors.Base
     @$el.find('input.geocomplete').geocomplete
       map: @$el.find('.map-canvas')
       # location: 'NYC'
+    @$el.on 'geocode:result', (event, result) =>
+      console.log result
 
     @
