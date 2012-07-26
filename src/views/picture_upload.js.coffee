@@ -14,17 +14,16 @@ class Backbone.Widgets.PictureUpload extends Backbone.Form.editors.Base
 
   # backbone form interface
   getValue: =>
-    @model.get('url')
+    @model.get('id')
 
   setValue: (value) =>
-    @model.set('url', value)
+    @model.set('id', value)
+    @model.fetch() if value
 
   updatePicture: =>
     if url = @model.get('thumb_url')
-      console.log url
       @$el.find('img').attr('src', url).show()
     else
-      console.log 'nono'
       @$el.find('img').attr('src', '').hide()
 
   render: =>
