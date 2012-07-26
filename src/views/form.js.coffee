@@ -17,11 +17,13 @@ class Backbone.Widgets.Form extends Backbone.Form
   render: ->
     super()
 
-    # render commit button
+    @appendSubmitButton()
+    @
+
+  appendSubmitButton: =>
     $container = $('<div class="form-actions"></div>')
     $container.append @button.render().el
     @$el.find('fieldset').append $container
-    @
 
   saveIfValid: (event) =>
     event.preventDefault()
