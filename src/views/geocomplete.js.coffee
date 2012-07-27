@@ -19,15 +19,17 @@ class Backbone.Widgets.Geocomplete extends Backbone.Form.editors.Base
     @geocodes
 
   setValue: (value) =>
-    @formatted_address = value
+    @geocodes = value
 
   # view methods
   render: =>
     @$el.html HandlebarsTemplates['geocomplete']()
 
-    @$el.find('input.geocomplete').geocomplete
-      map: @$el.find('.map-canvas')
-      location: @formatted_address
+    opts = map: @$el.find('.map-canvas')
+    if @geocodes.address?
+      opts['location'] = @geocodes.address
+
+    @$el.find('input.geocomplete').geocomplete(opts)
     @$el.on 'geocode:result', (event, result) =>
       postal_code_component = _(result.address_components).find (component) ->
         component.types[0] == 'postal_code'
