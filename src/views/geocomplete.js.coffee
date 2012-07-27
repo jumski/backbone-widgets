@@ -29,16 +29,16 @@ class Backbone.Widgets.Geocomplete extends Backbone.Form.editors.Base
       map: @$el.find('.map-canvas')
       location: @formatted_address
     @$el.on 'geocode:result', (event, result) =>
+      postal_code_component = _(result.address_components).find (component) ->
+        component.types[0] == 'postal_code'
+
       @geocodes =
-        formatted_address: result.formatted_address
+        zip_code: if postal_code_component?.short_name?
+                    postal_code_component.short_name
+                  else
+                    null
         latitude: result.geometry.location.$a
         longitude: result.geometry.location.ab
-
-      console.log @geocodes
-
-      # console.log result
-      # console.log result.formatted_address
-      # console.log result.geometry.location.$a
-      # console.log result.geometry.location.ab
+        address: result.formatted_address
 
     @
