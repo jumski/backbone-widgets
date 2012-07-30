@@ -73,10 +73,10 @@ class Backbone.Widgets.Tageditor extends Backbone.Form.editors.Base
 
   # backbone form interface
   getValue: =>
-    @filteredTags().join(', ')
+    @filteredTags()
 
   setValue: (value) =>
-    @tags = _.map(value.split(','), jQuery.trim)
+    @tags = _.map(value, jQuery.trim)
 
   # instance methods
   renderTags: =>
