@@ -49,3 +49,17 @@ class Backbone.Widgets.Form extends Backbone.Form
     regexp: /^\d+([,\.]\d{0,2})?$/
     message: I18n.t('validaton_errors.provide_valid_number')
 
+  @validateUniquenessOfEmail: ->
+    (email, formValues) ->
+      console.log formValues
+      response = $.ajax
+        url: '/validators/email.json'
+        data:
+          email: email
+        async: false
+
+      unless response.status == 200
+        type: 'unique_email'
+        message: I18n.t('errors.messages.email_has_been_taken')
+
+
