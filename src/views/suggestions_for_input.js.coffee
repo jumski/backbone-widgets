@@ -18,6 +18,8 @@ class Backbone.Widgets.SuggestionsForInput extends Backbone.View
     if @itemRenderer
       autocomplete.data('autocomplete')._renderItem = @itemRenderer
 
+    @
+
   selectCallback: (event, ui) =>
     @trigger 'select', event, ui.item
 

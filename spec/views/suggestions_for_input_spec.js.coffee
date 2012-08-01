@@ -1,127 +1,147 @@
 #=require views/suggestions_for_input
 
 describe 'Backbone.Widgets.SuggestionsForInput', ->
-  loadFixtures 'backbone-widgets/suggestions_for_input'
-  modelUrl = '/model_url'
-  model = new Backbone.Model url: modelUrl
-  collection = new Backbone.Collection model: model
-  fixture = $('<div><input type="text" /></div>')
-  input = $('input', fixture)
-  itemRenderer = (ul, item) ->
-  view = new Backbone.Widgets.SuggestionsForInput
-    el: input, collection: collection, itemRenderer: itemRenderer
+  beforeEach ->
+    $(document).ajaxError (event, request, settings) ->
+      # console.error "ajaxError!"
+      # conso
+      console.error request.responseText
+      console.log event
+      console.log request
+      console.log settings
 
-  oldRender = Backbone.Widgets.SuggestionsForInput::render
-  afterEach ->
-    Backbone.Widgets.SuggestionsForInput::render = oldRender
 
-  describe '#render', ->
+    loadFixtures 'backbone-widgets/suggestions_for_input'
+    @input = $('input#suggestions')
+    @modelClass = Backbone.Model.extend()
+    @collectionClass = Backbone.Collection.extend
+      model: @modelClass, url: 'some-url'
+    @collection = new @collectionClass
+
+  describe 'when setup with default options', ->
+    beforeEach ->
+      @view = new Backbone.Widgets.SuggestionsForInput
+        el: @input
+        collection: @collection
+        itemRenderer: ->
+      @view.render()
+      @data = @input.data('autocomplete')
+      @opts = @data.options
+
     it 'adds .has-suggestions class to input', ->
-      view.render()
-      expect(input.hasClass('has-suggestions')).toBeTruthy()
+      expect(@input.hasClass('has-suggestions')).toBeTruthy()
 
-    it 'calls focus() on passed element', ->
-      mock = sinon.mock($.fn)
-      mock.expects("focus").once().returns(input)
+    it 'sets source callback', ->
+      expect(@opts.source).toEqual(@view.sourceCallback)
 
-      view.render()
-      mock.verify()
+    it 'sets select callback', ->
+      expect(@opts.select).toEqual(@view.selectCallback)
 
-    it 'calls autocomplete() on passed element', ->
-      mock = sinon.mock($.fn)
-      mock.expects("autocomplete").once().returns(input)
+    describe 'integration test', ->
+      beforeEach ->
+        @server = sinon.fakeServer.create()
 
-      view.render()
-      mock.verify()
+      afterEach ->
+        @server.restore()
 
-    it 'sets _renderItem on autocomplete if options.itemRenderer provided', ->
-      autocomplete = {}
-      view.render()
-      data = input.data('autocomplete')
+      it 'fucking works', ->
+        @server.respondWith "GET", /some-url.*/, [
+          200, { "Content-Type": "application/json" },
+          JSON.stringify(id: 1, name: 'some name', label: 'some label')
+        ]
 
-      expect(data._renderItem).toEqual(itemRenderer)
+        $.get('/some-url?term=some', -> alert 'aa')
 
-    describe 'autocomplete settings', ->
-      it 'minLenght should equal 3', ->
-        view.render()
-        lenght = input.autocomplete("option", "minLength")
+        # @collection.fetch()
+        # params = {"type":"GET","dataType":"json","url":"some-url","data":{"term":"some"},"parse":true}
+        # params = {"type":"GET", "url":"/some-url"}
+        # $.ajax(params)
+        # @collection.fetch data: {term: 'some'}
+        # @input.val('some').trigger('keydown')
+        @server.respond()
 
-        expect(lenght).toEqual(3)
+        # expect(true).toBeFalsy()
 
-      it 'select should equal view.selectCallback', ->
-        select = input.autocomplete("option", "select")
-        expect(select).toEqual(view.selectCallback)
 
-      it 'source should equal view.sourceCallback', ->
-        source = input.autocomplete("option", "source")
-        expect(source).toEqual(view.sourceCallback)
 
-    describe '@selectCallback', ->
-      it 'triggers :select event with ui.item', ->
-        oldTrigger = view.trigger
-        view.trigger = sinon.spy()
 
-        view.selectCallback('some event', {item: 'some item'})
 
-        expect(view.trigger).toHaveBeenCalledWith('select', 'some item')
+  #   it 'sets _renderItem on autocomplete if options.itemRenderer provided', ->
+  #     autocomplete = {}
+  #     view.render()
+  #     data = input.data('autocomplete')
 
-        view.trigger = oldTrigger
+  #     expect(data._renderItem).toEqual(itemRenderer)
 
-    describe '@sourceCallback', ->
-      it 'sets collection term to request.term', ->
-        oldSetTerm = collection.setTerm
-        collection.setTerm = sinon.spy()
-        collection.url = '/some_url'
 
-        view.sourceCallback {term: 'some term'}, sinon.stub()
 
-        expect(collection.setTerm).toHaveBeenCalledWith('some term')
 
-        collection.setTerm = oldSetTerm
 
-      it 'calls @collection.fetch with results of @createSuccessCallback', ->
-        collection.setTerm = sinon.stub()
 
-        sinon.spy collection, 'fetch'
-        sinon.stub view, 'createSuccessCallback', -> 'success callback'
 
-        request = {term: 'some term'}
-        response = sinon.stub()
+  #   describe 'autocomplete settings', ->
+  #     it 'minLenght should equal 3', ->
+  #       view.render()
+  #       lenght = input.autocomplete("option", "minLength")
 
-        # call method
-        view.sourceCallback(request, response)
+  #       expect(lenght).toEqual(3)
 
-        expect(collection.fetch).toHaveBeenCalledWith('success callback')
 
-        view.createSuccessCallback.restore()
-        collection.fetch.restore()
+  #   describe '@sourceCallback', ->
+  #     it 'sets collection term to request.term', ->
+  #       oldSetTerm = collection.setTerm
+  #       collection.setTerm = sinon.spy()
+  #       collection.url = '/some_url'
 
-      it 'calls @view.createSuccessCallback with response object', ->
-        collection.setTerm = sinon.stub()
+  #       view.sourceCallback {term: 'some term'}, sinon.stub()
 
-        sinon.stub collection, 'fetch'
-        sinon.spy view, 'createSuccessCallback'
+  #       expect(collection.setTerm).toHaveBeenCalledWith('some term')
 
-        request = {term: 'some term'}
-        response = sinon.stub()
+  #       collection.setTerm = oldSetTerm
 
-        # call method
-        view.sourceCallback(request, response)
+  #     it 'calls @collection.fetch with results of @createSuccessCallback', ->
+  #       collection.setTerm = sinon.stub()
 
-        expect(view.createSuccessCallback).toHaveBeenCalledWith(response)
+  #       sinon.spy collection, 'fetch'
+  #       sinon.stub view, 'createSuccessCallback', -> 'success callback'
 
-        view.createSuccessCallback.restore()
-        collection.fetch.restore()
+  #       request = {term: 'some term'}
+  #       response = sinon.stub()
 
-    describe '@createSuccessCallback result.success', ->
-      it 'calls first argument with @collection.toJSON()', ->
-        sinon.stub collection, 'toJSON', -> 'json string'
-        response = sinon.spy()
+  #       # call method
+  #       view.sourceCallback(request, response)
 
-        result = view.createSuccessCallback(response)
-        result.success()
+  #       expect(collection.fetch).toHaveBeenCalledWith('success callback')
 
-        expect(response).toHaveBeenCalledWith('json string')
+  #       view.createSuccessCallback.restore()
+  #       collection.fetch.restore()
+
+  #     it 'calls @view.createSuccessCallback with response object', ->
+  #       collection.setTerm = sinon.stub()
+
+  #       sinon.stub collection, 'fetch'
+  #       sinon.spy view, 'createSuccessCallback'
+
+  #       request = {term: 'some term'}
+  #       response = sinon.stub()
+
+  #       # call method
+  #       view.sourceCallback(request, response)
+
+  #       expect(view.createSuccessCallback).toHaveBeenCalledWith(response)
+
+  #       view.createSuccessCallback.restore()
+  #       collection.fetch.restore()
+
+  #   describe '@createSuccessCallback result.success', ->
+  #     it 'calls first argument with @collection.toJSON()', ->
+  #       sinon.stub collection, 'toJSON', -> 'json string'
+  #       response = sinon.spy()
+
+  #       result = view.createSuccessCallback(response)
+  #       result.success()
+
+  #       expect(response).toHaveBeenCalledWith('json string')
 
 
 
