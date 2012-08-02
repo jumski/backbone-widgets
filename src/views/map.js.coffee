@@ -16,13 +16,16 @@ class Backbone.Widgets.Map extends Backbone.View
         lat: @lat
         lng: @lng
 
-      # render all markers
-      # _(@markers).each (marker) => marker.render()
-
-      _(@markersOpts).each (opts) =>
-        opts = _.extend(opts, {map: @})
-        marker = new Backbone.Widgets.MapMarker opts
-        marker.render()
-        @markers.push marker
-
+      @renderMarkers()
       @
+
+  renderMarkers: =>
+    _(@markers).each (marker) =>
+      marker.close()
+    @markers = []
+
+    _(@markersOpts).each (opts) =>
+      opts = _.extend(opts, {map: @})
+      marker = new Backbone.Widgets.MapMarker opts
+      marker.render()
+      @markers.push marker
