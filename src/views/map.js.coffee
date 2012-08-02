@@ -2,6 +2,10 @@
 
 class Backbone.Widgets.Map extends Backbone.View
   markers: []
+  tagName: 'div'
+  className: 'map'
+  attributes:
+    id: 'gmaps'
 
   initialize: (opts) =>
     @lat = opts.lat
@@ -10,14 +14,13 @@ class Backbone.Widgets.Map extends Backbone.View
     @markersOpts = opts.markers
 
   render: =>
-    if $('#map').length
-      @gmap = new GMaps
-        div: @$el.attr('id')
-        lat: @lat
-        lng: @lng
+    @gmap = new GMaps
+      div: @$el.attr('id')
+      lat: @lat
+      lng: @lng
 
-      @renderMarkers()
-      @
+    @renderMarkers()
+    @
 
   renderMarkers: =>
     _(@markers).each (marker) =>
