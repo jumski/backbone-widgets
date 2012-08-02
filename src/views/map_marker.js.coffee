@@ -25,13 +25,13 @@ class Backbone.Widgets.MapMarker extends Backbone.View
       lng: @lng
       icon: "https://developers.google.com/maps/documentation/javascript/examples/images/beachflag.png"
       title: @title
-      mouseover: @showinfoBox
-      mouseout: @hideinfoBox
+      mouseover: @showInfoBox
+      mouseout: @hideInfoBox
 
-  showinfoBox: (event) =>
+  showInfoBox: (event) =>
     clearTimeout(@timeout)
     @infobox.open(@map.gmap.map, @marker)
 
-  hideinfoBox: =>
+  hideInfoBox: =>
     clearTimeout(@timeout) if @timeout
     @timeout = setTimeout((=> @infobox.close()), 200)
