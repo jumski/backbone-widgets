@@ -12,12 +12,25 @@ class Backbone.Widgets.Map extends Backbone.View
     @lng = opts.lng
     @el = opts.el
     @markersOpts = opts.markers
+    @collection = opts.collection
+    @collection.on 'change', @renderMarkers
 
   render: =>
     @gmap = new GMaps
       div: @$el.attr('id')
       lat: @lat
       lng: @lng
+      zoom_changed: (x,y)->
+        @collection.fetch data:
+          min_lat: @map.minLat()
+          max_lat: @map.maxLat()
+          min_lng: @map.minLng()
+          max_lng: @map.maxLng()
+
+      dragend: (x,y)->
+        console.log x
+        console.log y
+        console.log @
 
     @renderMarkers()
     @
