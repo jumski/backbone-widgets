@@ -20,17 +20,10 @@ class Backbone.Widgets.Map extends Backbone.View
       div: @$el.attr('id')
       lat: @lat
       lng: @lng
-      zoom_changed: (x,y)->
-        @collection.fetch data:
-          min_lat: @map.minLat()
-          max_lat: @map.maxLat()
-          min_lng: @map.minLng()
-          max_lng: @map.maxLng()
+      zoom_changed: @updateCollection
+      dragend: @updateCollection
 
-      dragend: (x,y)->
-        console.log x
-        console.log y
-        console.log @
+    window.map = @
 
     @renderMarkers()
     @
@@ -45,3 +38,18 @@ class Backbone.Widgets.Map extends Backbone.View
       marker = new Backbone.Widgets.MapMarker opts
       marker.render()
       @markers.push marker
+
+  updateCollection: =>
+    @collection.fetch data: @getBounds()
+
+  getBounds: =>
+    bounds = @gmap.map.getBounds()
+
+    return {
+      ne:
+        lat: bounds.getNorthEast().lat()
+        lng: bounds.getNorthEast().lng()
+      sw:
+        lat: bounds.getSouthWest().lat()
+        lng: bounds.getSouthWest().lng()
+    }
