@@ -13,7 +13,7 @@ class Backbone.Widgets.Map extends Backbone.View
     @el = opts.el
     @markersOpts = opts.markers
     @collection = opts.collection
-    @collection.on 'change', @renderMarkers
+    @collection.on 'reset', @renderMarkers
 
   render: =>
     @gmap = new GMaps
