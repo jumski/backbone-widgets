@@ -47,9 +47,14 @@ class Backbone.Widgets.Map extends Backbone.View
   getBounds: =>
     bounds = @gmap.map.getBounds()
 
+    lats = [ bounds.getNorthEast().lat(),
+             bounds.getSouthWest().lat() ]
+    lngs = [ bounds.getNorthEast().lng(),
+             bounds.getSouthWest().lng() ]
+
     return {
-      min_lat: bounds.getNorthEast().lat()
-      min_lng: bounds.getNorthEast().lng()
-      max_lat: bounds.getSouthWest().lat()
-      max_lng: bounds.getSouthWest().lng()
+      min_lat: _(lats).min()
+      min_lng: _(lngs).min()
+      max_lat: _(lats).max()
+      max_lng: _(lngs).max()
     }
