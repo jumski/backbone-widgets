@@ -31,8 +31,13 @@ class Backbone.Widgets.Map extends Backbone.View
       marker.close()
     @markers = []
 
-    _(@markersOpts).each (opts) =>
-      opts = _.extend(opts, {map: @})
+    @collection.each (marker) =>
+      opts =
+        title: marker.getTitle()
+        lat: marker.getLatitude()
+        lng: marker.getLongitude()
+        map: @
+
       marker = new Backbone.Widgets.MapMarker opts
       marker.render()
       @markers.push marker
