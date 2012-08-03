@@ -23,8 +23,6 @@ class Backbone.Widgets.Map extends Backbone.View
       zoom_changed: @updateCollection
       dragend: @updateCollection
 
-    window.map = @
-
     @renderMarkers()
     @
 
