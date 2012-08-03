@@ -40,16 +40,16 @@ class Backbone.Widgets.Map extends Backbone.View
       @markers.push marker
 
   updateCollection: =>
-    @collection.fetch data: @getBounds()
+    @collection.fetch
+      data:
+        bounds: @getBounds()
 
   getBounds: =>
     bounds = @gmap.map.getBounds()
 
     return {
-      ne:
-        lat: bounds.getNorthEast().lat()
-        lng: bounds.getNorthEast().lng()
-      sw:
-        lat: bounds.getSouthWest().lat()
-        lng: bounds.getSouthWest().lng()
+      min_lat: bounds.getNorthEast().lat()
+      min_lng: bounds.getNorthEast().lng()
+      max_lat: bounds.getSouthWest().lat()
+      max_lng: bounds.getSouthWest().lng()
     }
