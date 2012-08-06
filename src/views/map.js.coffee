@@ -7,6 +7,8 @@ class Backbone.Widgets.Map extends Backbone.View
   attributes:
     id: 'gmaps'
 
+  @timeoutId = null
+
   initialize: (opts) =>
     @lat = opts.lat
     @lng = opts.lng
@@ -20,8 +22,10 @@ class Backbone.Widgets.Map extends Backbone.View
       div: @$el.attr('id')
       lat: @lat
       lng: @lng
-      zoom_changed: @updateCollection
-      dragend: @updateCollection
+    google.maps.event.addListener @gmap.map, 'idle', =>
+    google.maps.event.addListener @gmap.map, 'bounds_changed', =>
+      clearTimeout(@timeoutId) if @timeoutId
+      @timeoutId = setTimeout @updateCollection, 200
 
     @renderMarkers()
     @
