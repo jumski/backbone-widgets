@@ -29,7 +29,7 @@ class Backbone.Widgets.Map extends Backbone.View
     google.maps.event.addListener @gmap, 'idle', =>
     google.maps.event.addListener @gmap, 'bounds_changed', =>
       clearTimeout(@timeoutId) if @timeoutId
-      @timeoutId = setTimeout @updateCollection, 200
+      @timeoutId = setTimeout(@updateCollection, 200)
 
     @
 
