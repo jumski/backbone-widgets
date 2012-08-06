@@ -11,6 +11,7 @@ class Backbone.Widgets.Map extends Backbone.View
     @collection = opts.collection
 
     @collection.on 'add', @createMarker
+    @spinner = new Spinner lines: 13, width: 4, length: 3, radius: 15
 
   render: =>
     latLng = new google.maps.LatLng(@lat, @lng)
@@ -46,10 +47,12 @@ class Backbone.Widgets.Map extends Backbone.View
     @collection.each @createMarker
 
   updateCollection: =>
+    @showLoadingIndicator()
     @collection.fetch
       data:
         bounds: @getBounds()
       add: true
+      success: @hideLoadingIndicator
 
   createMarker: (marker) =>
     opts =
@@ -80,3 +83,12 @@ class Backbone.Widgets.Map extends Backbone.View
       max_lat: _(lats).max()
       max_lng: _(lngs).max()
     }
+
+  showLoadingIndicator: =>
+    @spinner.spin()
+    @$el.parent().prepend(@spinner.el).css(opacity: 0.4)
+    $(@spinner.el).css(left: '50%', top: '250px')
+
+  hideLoadingIndicator: =>
+    @spinner.stop()
+    @$el.parent().css opacity: 1
