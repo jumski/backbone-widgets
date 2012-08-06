@@ -39,8 +39,8 @@ class Backbone.Widgets.Geocomplete extends Backbone.Form.editors.Base
                     postal_code_component.short_name
                   else
                     null
-        latitude: result.geometry.location.$a
-        longitude: result.geometry.location.ab
+        latitude: result.geometry.location.lat()
+        longitude: result.geometry.location.lng()
         address: result.formatted_address
 
     @
