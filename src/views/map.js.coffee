@@ -33,10 +33,20 @@ class Backbone.Widgets.Map extends Backbone.View
 
     @
 
-  renderMarkers: =>
+  close: =>
+    @clearMarkers()
+    google.maps.event.clearListeners(@gmap, 'idle')
+    google.maps.event.clearListeners(@gmap, 'bounds_changed')
+    @gmap = null
+    super()
+
+  clearMarkers: =>
     _(@markers).each (marker) =>
       marker.close()
     @markers = []
+
+  renderMarkers: =>
+    @clearMarkers()
 
     @collection.each (marker) =>
       opts =

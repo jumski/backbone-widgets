@@ -43,6 +43,13 @@ class Backbone.Widgets.MapMarker extends Backbone.View
     google.maps.event.addListener(@marker, 'mouseover', @showInfoBox)
     google.maps.event.addListener(@marker, 'mouseout', @hideInfoBox)
 
+  close: =>
+    google.maps.event.clearListeners(@marker, 'mouseover')
+    google.maps.event.clearListeners(@marker, 'mouseout')
+    @marker.setMap(null)
+    @marker = null
+    super()
+
   showInfoBox: (event) =>
     clearTimeout(@timeout)
     @infobox.open(@gmap, @marker)
