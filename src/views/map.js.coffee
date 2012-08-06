@@ -23,11 +23,10 @@ class Backbone.Widgets.Map extends Backbone.View
       mapTypeId: google.maps.MapTypeId.ROADMAP
     @gmap = new google.maps.Map @el.get(0), mapOptions
 
-    google.maps.event.addListener @gmap, 'idle', =>
-    google.maps.event.addListener @gmap, 'bounds_changed', =>
-      clearTimeout(@timeoutId) if @timeoutId
-      @timeoutId = setTimeout(@updateCollection, 200)
-
+    google.maps.event.addListener(@gmap, 'idle', =>)
+    google.maps.event.addListener(@gmap,
+                                  'bounds_changed',
+                                  _.debounce(@updateCollection, 200))
     @
 
   close: =>

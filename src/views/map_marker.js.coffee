@@ -1,8 +1,6 @@
 #= require gmaps_infobox
 
 class Backbone.Widgets.MapMarker extends Backbone.View
-  timeout: null
-
   initialize: (opts) =>
     @title = opts.title
     @lat   = opts.lat
@@ -41,8 +39,8 @@ class Backbone.Widgets.MapMarker extends Backbone.View
       title: @title
       icon: icon
       shadow: shadow
-    google.maps.event.addListener(@marker, 'mouseover', @showInfoBox)
-    google.maps.event.addListener(@marker, 'mouseout', @hideInfoBox)
+    google.maps.event.addListener(@marker, 'mouseover', _.debounce(@showInfoBox))
+    google.maps.event.addListener(@marker, 'mouseout', _.debounce(@hideInfoBox))
 
   close: =>
     google.maps.event.clearListeners(@marker, 'mouseover')
@@ -52,9 +50,7 @@ class Backbone.Widgets.MapMarker extends Backbone.View
     super()
 
   showInfoBox: (event) =>
-    clearTimeout(@timeout)
     @infobox.open(@gmap, @marker)
 
   hideInfoBox: =>
-    clearTimeout(@timeout) if @timeout
-    @timeout = setTimeout((=> @infobox.close()), 200)
+    @infobox.close()
