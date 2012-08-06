@@ -21,10 +21,24 @@ class Backbone.Widgets.MapMarker extends Backbone.View
       isHidden: false
       enableEventPropagation: false
 
+    icon = new google.maps.MarkerImage(
+      "/assets/marker-#{@color}.png",
+      new google.maps.Size(28, 27),
+      new google.maps.Point(0, 0),
+      new google.maps.Point(14, 27),
+    )
+    shadow = new google.maps.MarkerImage(
+      "/assets/marker-shadow.png",
+      new google.maps.Size(26, 28),
+      new google.maps.Point(0, 0),
+      new google.maps.Point(8, 28),
+    )
+
     @marker = @map.gmap.addMarker
       lat: @lat
       lng: @lng
-      icon: "/assets/marker-#{@color}.png"
+      icon: icon
+      shadow: shadow
       title: @title
       mouseover: @showInfoBox
       mouseout: @hideInfoBox
