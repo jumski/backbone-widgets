@@ -8,6 +8,7 @@ class Backbone.Widgets.MapMarker extends Backbone.View
     @lat   = opts.lat
     @lng   = opts.lng
     @map   = opts.map
+    @color = opts.color
 
   render: =>
     @infobox = new InfoBox
@@ -23,7 +24,7 @@ class Backbone.Widgets.MapMarker extends Backbone.View
     @marker = @map.gmap.addMarker
       lat: @lat
       lng: @lng
-      icon: "https://developers.google.com/maps/documentation/javascript/examples/images/beachflag.png"
+      icon: "/assets/marker-#{@color}.png"
       title: @title
       mouseover: @showInfoBox
       mouseout: @hideInfoBox

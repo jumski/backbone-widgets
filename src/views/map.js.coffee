@@ -36,6 +36,10 @@ class Backbone.Widgets.Map extends Backbone.View
         title: marker.getTitle()
         lat: marker.getLatitude()
         lng: marker.getLongitude()
+        color: if marker instanceof TurnYourTime.Models.Offer
+                 'red'
+               else
+                 'blue'
         map: @
 
       marker = new Backbone.Widgets.MapMarker opts
