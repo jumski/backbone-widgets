@@ -1,19 +1,16 @@
 class Backbone.Widgets.Map extends Backbone.View
-  markers: []
   tagName: 'div'
   className: 'map'
-  attributes:
-    id: 'gmaps'
 
-  @timeoutId = null
+  markers: []
 
   initialize: (opts) =>
-    @lat = opts.lat
-    @lng = opts.lng
-    @el = opts.el
-    @markersOpts = opts.markers
+    @lat        = opts.lat
+    @lng        = opts.lng
+    @el         = opts.el
     @collection = opts.collection
-    @collection.on 'reset', @renderMarkers
+
+    @collection.on 'add', @createMarker
 
   render: =>
     latLng = new google.maps.LatLng(@lat, @lng)
@@ -47,26 +44,28 @@ class Backbone.Widgets.Map extends Backbone.View
 
   renderMarkers: =>
     @clearMarkers()
-
-    @collection.each (marker) =>
-      opts =
-        title: marker.getTitle()
-        lat: marker.getLatitude()
-        lng: marker.getLongitude()
-        color: if marker instanceof TurnYourTime.Models.Offer
-                 'red'
-               else
-                 'blue'
-        gmap: @gmap
-
-      marker = new Backbone.Widgets.MapMarker opts
-      marker.render()
-      @markers.push marker
+    @collection.each @createMarker
 
   updateCollection: =>
     @collection.fetch
       data:
         bounds: @getBounds()
+      add: true
+
+  createMarker: (marker) =>
+    opts =
+      title: marker.getTitle()
+      lat: marker.getLatitude()
+      lng: marker.getLongitude()
+      color: if marker instanceof TurnYourTime.Models.Offer
+               'red'
+             else
+               'blue'
+      gmap: @gmap
+
+    marker = new Backbone.Widgets.MapMarker opts
+    marker.render()
+    @markers.push marker
 
   getBounds: =>
     bounds = @gmap.getBounds()
