@@ -7,7 +7,7 @@ class Backbone.Widgets.MapMarker extends Backbone.View
     @title = opts.title
     @lat   = opts.lat
     @lng   = opts.lng
-    @map   = opts.map
+    @gmap   = opts.gmap
     @color = opts.color
 
   render: =>
@@ -34,18 +34,18 @@ class Backbone.Widgets.MapMarker extends Backbone.View
       new google.maps.Point(8, 28),
     )
 
-    @marker = @map.gmap.addMarker
-      lat: @lat
-      lng: @lng
+    @marker = new google.maps.Marker
+      position: new google.maps.LatLng(@lat, @lng)
+      map: @gmap
+      title: @title
       icon: icon
       shadow: shadow
-      title: @title
-      mouseover: @showInfoBox
-      mouseout: @hideInfoBox
+    google.maps.event.addListener(@marker, 'mouseover', @showInfoBox)
+    google.maps.event.addListener(@marker, 'mouseout', @hideInfoBox)
 
   showInfoBox: (event) =>
     clearTimeout(@timeout)
-    @infobox.open(@map.gmap.map, @marker)
+    @infobox.open(@gmap, @marker)
 
   hideInfoBox: =>
     clearTimeout(@timeout) if @timeout

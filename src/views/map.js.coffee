@@ -1,5 +1,3 @@
-#= require gmaps
-
 class Backbone.Widgets.Map extends Backbone.View
   markers: []
   tagName: 'div'
@@ -18,16 +16,22 @@ class Backbone.Widgets.Map extends Backbone.View
     @collection.on 'reset', @renderMarkers
 
   render: =>
-    @gmap = new GMaps
-      div: @$el.attr('id')
-      lat: @lat
-      lng: @lng
-    google.maps.event.addListener @gmap.map, 'idle', =>
-    google.maps.event.addListener @gmap.map, 'bounds_changed', =>
+    latLng = new google.maps.LatLng(@lat, @lng)
+    console.log JSON.stringify(latLng)
+
+    mapOptions =
+      mapTypeControl: false
+      overviewMapControl: false
+      zoom:      14
+      center:    latLng
+      mapTypeId: google.maps.MapTypeId.ROADMAP
+    @gmap = new google.maps.Map @el.get(0), mapOptions
+
+    google.maps.event.addListener @gmap, 'idle', =>
+    google.maps.event.addListener @gmap, 'bounds_changed', =>
       clearTimeout(@timeoutId) if @timeoutId
       @timeoutId = setTimeout @updateCollection, 200
 
-    @renderMarkers()
     @
 
   renderMarkers: =>
@@ -44,7 +48,7 @@ class Backbone.Widgets.Map extends Backbone.View
                  'red'
                else
                  'blue'
-        map: @
+        gmap: @gmap
 
       marker = new Backbone.Widgets.MapMarker opts
       marker.render()
@@ -56,7 +60,7 @@ class Backbone.Widgets.Map extends Backbone.View
         bounds: @getBounds()
 
   getBounds: =>
-    bounds = @gmap.map.getBounds()
+    bounds = @gmap.getBounds()
 
     lats = [ bounds.getNorthEast().lat(),
              bounds.getSouthWest().lat() ]
