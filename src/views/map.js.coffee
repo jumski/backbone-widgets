@@ -86,7 +86,8 @@ class Backbone.Widgets.Map extends Backbone.View
 
   showLoadingIndicator: =>
     @spinner.spin()
-    @$el.parent().prepend(@spinner.el).css(opacity: 0.4)
+    @$el.parent().parent().prepend(@spinner.el)
+    @$el.parent().css(opacity: 0.3)
     $(@spinner.el).css(left: '50%', top: '250px')
 
   hideLoadingIndicator: =>
