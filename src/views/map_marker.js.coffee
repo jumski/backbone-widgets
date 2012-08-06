@@ -13,11 +13,12 @@ class Backbone.Widgets.MapMarker extends Backbone.View
   render: =>
     @infobox = new InfoBox
       content: HandlebarsTemplates['gmaps_infobox'](title: @title)
-      disableAutoPan: false
+      disableAutoPan: true
+      # disableAutoPan: false
       maxWidth: 100
       pixelOffset: new google.maps.Size(25, -37)
       zIndex: null
-      infoBoxClearance: new google.maps.Size(1, 1)
+      # infoBoxClearance: new google.maps.Size(10, 10)
       isHidden: false
       enableEventPropagation: false
 
