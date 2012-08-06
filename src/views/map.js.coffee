@@ -17,7 +17,6 @@ class Backbone.Widgets.Map extends Backbone.View
 
   render: =>
     latLng = new google.maps.LatLng(@lat, @lng)
-    console.log JSON.stringify(latLng)
 
     mapOptions =
       mapTypeControl: false
