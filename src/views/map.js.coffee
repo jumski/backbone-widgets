@@ -11,7 +11,7 @@ class Backbone.Widgets.Map extends Backbone.View
     @collection = opts.collection
 
     @collection.on 'add', @createMarker
-    @spinner = new Spinner lines: 13, width: 4, length: 3, radius: 15
+    @spinner = new Spinner lines: 9, width: 1, length: 6, radius: 4
 
   render: =>
     latLng = new google.maps.LatLng(@lat, @lng)
@@ -87,8 +87,7 @@ class Backbone.Widgets.Map extends Backbone.View
   showLoadingIndicator: =>
     @spinner.spin()
     @$el.parent().parent().prepend(@spinner.el)
-    @$el.parent().css(opacity: 0.3)
-    $(@spinner.el).css(left: '50%', top: '250px')
+    $(@spinner.el).css(left: '15px', top: '15px')
 
   hideLoadingIndicator: =>
     @spinner.stop()
