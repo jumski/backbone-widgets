@@ -11,7 +11,7 @@ class Backbone.Widgets.Map extends Backbone.View
     @collection = opts.collection
 
     @collection.on 'add', @createMarker
-    @spinner = new Spinner lines: 9, width: 1, length: 6, radius: 4
+    @spinner = new Spinner lines: 9, width: 2, length: 6, radius: 4
 
   render: =>
     latLng = new google.maps.LatLng(@lat, @lng)
@@ -27,7 +27,7 @@ class Backbone.Widgets.Map extends Backbone.View
     google.maps.event.addListener(@gmap, 'idle', =>)
     google.maps.event.addListener(@gmap,
                                   'bounds_changed',
-                                  _.debounce(@updateCollection, 200))
+                                  _.debounce(@updateCollection, 300))
     @
 
   close: =>
