@@ -2,6 +2,8 @@
 
 class Backbone.Widgets.Datepicker extends Backbone.Form.editors.Base
   tagName: 'input'
+  attributes:
+    type: "text"
 
   initialize: (options) =>
     super(options)
@@ -12,8 +14,6 @@ class Backbone.Widgets.Datepicker extends Backbone.Form.editors.Base
       maxDate: "+1m"
       monthNames: I18n.t('date.month_names')
       dayNamesMin: I18n.t('date.abbr_day_names')
-
-    @$el.attr('type', 'text')
 
     @setValue(@value)
 
