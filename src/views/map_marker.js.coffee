@@ -5,7 +5,7 @@ class Backbone.Widgets.MapMarker extends Backbone.View
     @title = opts.title
     @lat   = opts.lat
     @lng   = opts.lng
-    @gmap   = opts.gmap
+    @map   = opts.map
     @color = opts.color
 
   render: =>
@@ -35,7 +35,7 @@ class Backbone.Widgets.MapMarker extends Backbone.View
 
     @marker = new google.maps.Marker
       position: new google.maps.LatLng(@lat, @lng)
-      map: @gmap
+      map: @map.getGmap()
       title: @title
       icon: icon
       shadow: shadow

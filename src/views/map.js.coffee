@@ -5,13 +5,9 @@ class Backbone.Widgets.Map extends Backbone.View
   markers: []
 
   initialize: (opts) =>
-    @lat        = opts.lat
-    @lng        = opts.lng
-    @el         = opts.el
-    @collection = opts.collection
-
-    @collection.on 'add', @createMarker
-    @spinner = new Spinner lines: 9, width: 2, length: 6, radius: 4
+    @lat = opts.lat
+    @lng = opts.lng
+    @el  = opts.el
 
   render: =>
     latLng = new google.maps.LatLng(@lat, @lng)
@@ -24,14 +20,14 @@ class Backbone.Widgets.Map extends Backbone.View
       mapTypeId: google.maps.MapTypeId.ROADMAP
     @gmap = new google.maps.Map @el.get(0), mapOptions
 
-    google.maps.event.addListener(@gmap, 'idle', =>)
-    google.maps.event.addListener(@gmap,
-                                  'bounds_changed',
-                                  _.debounce(@updateCollection, 300))
+    google.maps.event.addListener(@gmap, 'idle', ->)
+    google.maps.event.addListener(@gmap, 'bounds_changed',
+                                  => @trigger('bounds_changed', @getBounds()))
     @
 
   close: =>
     @clearMarkers()
+    @off 'bounds_changed'
     google.maps.event.clearListeners(@gmap, 'idle')
     google.maps.event.clearListeners(@gmap, 'bounds_changed')
     @gmap = null
@@ -42,30 +38,12 @@ class Backbone.Widgets.Map extends Backbone.View
       marker.close()
     @markers = []
 
-  renderMarkers: =>
-    @clearMarkers()
-    @collection.each @createMarker
+  # renderMarkers: =>
+  #   @clearMarkers()
+  #   @collection.each @createMarker
 
-  updateCollection: =>
-    @showLoadingIndicator()
-    @collection.fetch
-      data:
-        bounds: @getBounds()
-      add: true
-      success: @hideLoadingIndicator
-
-  createMarker: (marker) =>
-    opts =
-      title: marker.getTitle()
-      lat: marker.getLatitude()
-      lng: marker.getLongitude()
-      color: if marker instanceof TurnYourTime.Models.Offer
-               'red'
-             else
-               'blue'
-      gmap: @gmap
-
-    marker = new Backbone.Widgets.MapMarker opts
+  createMarker: (markerOpts) =>
+    marker = new Backbone.Widgets.MapMarker(markerOpts)
     marker.render()
     @markers.push marker
 
@@ -84,11 +62,4 @@ class Backbone.Widgets.Map extends Backbone.View
       max_lng: _(lngs).max()
     }
 
-  showLoadingIndicator: =>
-    @spinner.spin()
-    @$el.parent().parent().prepend(@spinner.el)
-    $(@spinner.el).css(left: '15px', top: '15px')
-
-  hideLoadingIndicator: =>
-    @spinner.stop()
-    @$el.parent().css opacity: 1
+  getGmap: => @gmap
