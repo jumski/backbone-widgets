@@ -1,12 +1,23 @@
 #= require gmaps_infobox
 
 class Backbone.Widgets.MapMarker extends Backbone.View
+  defaultMarkerImage:
+    origin: [0, 0]
+    anchor: [0, 0]
+  defaultMarkerShadow:
+    origin: [0, 0]
+    anchor: [0, 0]
+
   initialize: (opts) =>
     @title = opts.title
     @lat   = opts.lat
     @lng   = opts.lng
     @map   = opts.map
-    @color = opts.color
+
+    if opts.markerImage
+      @markerImage = _.extend({}, @defaultMarkerImage, opts.markerImage)
+      if opts.markerShadow
+        @markerShadow = _.extend({}, @defaultMarkerShadow, opts.markerShadow)
 
   render: =>
     @infobox = new InfoBox
@@ -20,25 +31,28 @@ class Backbone.Widgets.MapMarker extends Backbone.View
       isHidden: false
       enableEventPropagation: false
 
-    icon = new google.maps.MarkerImage(
-      "/assets/marker-#{@color}.png",
-      new google.maps.Size(28, 27),
-      new google.maps.Point(0, 0),
-      new google.maps.Point(14, 27),
-    )
-    shadow = new google.maps.MarkerImage(
-      "/assets/marker-shadow.png",
-      new google.maps.Size(26, 28),
-      new google.maps.Point(0, 0),
-      new google.maps.Point(8, 28),
-    )
-
-    @marker = new google.maps.Marker
+    opts =
       position: new google.maps.LatLng(@lat, @lng)
       map: @map.getGmap()
       title: @title
-      icon: icon
-      shadow: shadow
+
+    if @markerImage
+      opts.icon = new google.maps.MarkerImage(
+        @markerImage.url,
+        new google.maps.Size(@markerImage.size...),
+        new google.maps.Point(@markerImage.origin...),
+        new google.maps.Point(@markerImage.anchor...),
+      )
+
+      if @markerShadow
+        opts.shadow = new google.maps.MarkerImage(
+          @markerShadow.url,
+          new google.maps.Size(@markerShadow.size...),
+          new google.maps.Point(@markerShadow.origin...),
+          new google.maps.Point(@markerShadow.anchor...),
+        )
+
+    @marker = new google.maps.Marker(opts)
     google.maps.event.addListener(@marker, 'mouseover', _.debounce(@showInfoBox))
     google.maps.event.addListener(@marker, 'mouseout', _.debounce(@hideInfoBox))
 
