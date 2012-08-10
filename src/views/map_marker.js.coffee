@@ -1,10 +1,10 @@
 #= require gmaps_infobox
 
 class Backbone.Widgets.MapMarker extends Backbone.View
-  markerImageDefaults:
+  iconDefaults:
     origin: [0, 0]
     anchor: [0, 0]
-  markerShadowDefaults:
+  shadowDefaults:
     origin: [0, 0]
     anchor: [0, 0]
   infoBoxDefaults:
@@ -21,10 +21,10 @@ class Backbone.Widgets.MapMarker extends Backbone.View
     @lng   = opts.lng
     @map   = opts.map
 
-    if opts.markerImage
-      @markerImageOpts = _.extend({}, @markerImageDefaults, opts.markerImage)
-      if opts.markerShadow
-        @markerShadowOpts = _.extend({}, @markerShadowDefaults, opts.markerShadow)
+    if opts.icon
+      @iconOpts = _.extend({}, @iconDefaults, opts.icon)
+      if opts.shadow
+        @shadowOpts = _.extend({}, @shadowDefaults, opts.shadow)
 
     if opts.infoBox
       @infoBoxOpts = _.extend({}, @infoBoxDefaults, opts.infoBox)
@@ -36,20 +36,20 @@ class Backbone.Widgets.MapMarker extends Backbone.View
       title: @title
 
     # initialize image/shadow
-    if @markerImageOpts
+    if @iconOpts
       markerOpts.icon = new google.maps.MarkerImage(
-        @markerImageOpts.url,
-        new google.maps.Size(@markerImageOpts.size...),
-        new google.maps.Point(@markerImageOpts.origin...),
-        new google.maps.Point(@markerImageOpts.anchor...),
+        @iconOpts.url,
+        new google.maps.Size(@iconOpts.size...),
+        new google.maps.Point(@iconOpts.origin...),
+        new google.maps.Point(@iconOpts.anchor...),
       )
 
-      if @markerShadowOpts
+      if @shadowOpts
         markerOpts.shadow = new google.maps.MarkerImage(
-          @markerShadowOpts.url,
-          new google.maps.Size(@markerShadowOpts.size...),
-          new google.maps.Point(@markerShadowOpts.origin...),
-          new google.maps.Point(@markerShadowOpts.anchor...),
+          @shadowOpts.url,
+          new google.maps.Size(@shadowOpts.size...),
+          new google.maps.Point(@shadowOpts.origin...),
+          new google.maps.Point(@shadowOpts.anchor...),
         )
 
     # create marker object
