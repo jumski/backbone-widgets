@@ -1,6 +1,6 @@
 #= require jquery-ui
 
-class Backbone.Widgets.Datepicker extends Backbone.Form.editors.Base
+class Backbone.Widgets.DatepickerEditor extends Backbone.Form.editors.Base
   tagName: 'input'
   attributes:
     type: "text"

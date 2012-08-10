@@ -1,6 +1,6 @@
 #= require jquery.fileupload
 
-class Backbone.Widgets.PictureUpload extends Backbone.Form.editors.Base
+class Backbone.Widgets.PictureUploadEditor extends Backbone.Form.editors.Base
   tagName: 'div'
   className: 'picture-upload'
 
