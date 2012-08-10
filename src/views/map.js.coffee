@@ -38,10 +38,6 @@ class Backbone.Widgets.Map extends Backbone.View
       marker.close()
     @markers = []
 
-  # renderMarkers: =>
-  #   @clearMarkers()
-  #   @collection.each @createMarker
-
   createMarker: (markerOpts) =>
     marker = new Backbone.Widgets.MapMarker(markerOpts)
     marker.render()
