@@ -1,4 +1,4 @@
-class Backbone.Widgets.Tageditor extends Backbone.Form.editors.Base
+class Backbone.Widgets.TagEditor extends Backbone.Form.editors.Base
   tags: []
 
   tagName: 'div'
