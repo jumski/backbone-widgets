@@ -1,12 +1,19 @@
 #= require gmaps_infobox
 
 class Backbone.Widgets.MapMarker extends Backbone.View
-  defaultMarkerImage:
+  markerImageDefaults:
     origin: [0, 0]
     anchor: [0, 0]
-  defaultMarkerShadow:
+  markerShadowDefaults:
     origin: [0, 0]
     anchor: [0, 0]
+  infoBoxDefaults:
+    disableAutoPan: true
+    # works with above set to false - it is an auto pan margin
+    # infoBoxOptsClearance: new google.maps.Size(10, 10)
+    zIndex: null
+    isHidden: false
+    enableEventPropagation: false
 
   initialize: (opts) =>
     @title = opts.title
@@ -15,46 +22,44 @@ class Backbone.Widgets.MapMarker extends Backbone.View
     @map   = opts.map
 
     if opts.markerImage
-      @markerImage = _.extend({}, @defaultMarkerImage, opts.markerImage)
+      @markerImageOpts = _.extend({}, @markerImageDefaults, opts.markerImage)
       if opts.markerShadow
-        @markerShadow = _.extend({}, @defaultMarkerShadow, opts.markerShadow)
+        @markerShadowOpts = _.extend({}, @markerShadowDefaults, opts.markerShadow)
+
+    if opts.infoBox
+      @infoBoxOpts = _.extend({}, @infoBoxDefaults, opts.infoBox)
 
   render: =>
-    @infobox = new InfoBox
-      content: HandlebarsTemplates['gmaps_infobox'](title: @title)
-      disableAutoPan: true
-      # disableAutoPan: false
-      maxWidth: 100
-      pixelOffset: new google.maps.Size(25, -37)
-      zIndex: null
-      # infoBoxClearance: new google.maps.Size(10, 10)
-      isHidden: false
-      enableEventPropagation: false
-
-    opts =
+    markerOpts =
       position: new google.maps.LatLng(@lat, @lng)
       map: @map.getGmap()
       title: @title
 
-    if @markerImage
-      opts.icon = new google.maps.MarkerImage(
-        @markerImage.url,
-        new google.maps.Size(@markerImage.size...),
-        new google.maps.Point(@markerImage.origin...),
-        new google.maps.Point(@markerImage.anchor...),
+    # initialize image/shadow
+    if @markerImageOpts
+      markerOpts.icon = new google.maps.MarkerImage(
+        @markerImageOpts.url,
+        new google.maps.Size(@markerImageOpts.size...),
+        new google.maps.Point(@markerImageOpts.origin...),
+        new google.maps.Point(@markerImageOpts.anchor...),
       )
 
-      if @markerShadow
-        opts.shadow = new google.maps.MarkerImage(
-          @markerShadow.url,
-          new google.maps.Size(@markerShadow.size...),
-          new google.maps.Point(@markerShadow.origin...),
-          new google.maps.Point(@markerShadow.anchor...),
+      if @markerShadowOpts
+        markerOpts.shadow = new google.maps.MarkerImage(
+          @markerShadowOpts.url,
+          new google.maps.Size(@markerShadowOpts.size...),
+          new google.maps.Point(@markerShadowOpts.origin...),
+          new google.maps.Point(@markerShadowOpts.anchor...),
         )
 
-    @marker = new google.maps.Marker(opts)
-    google.maps.event.addListener(@marker, 'mouseover', _.debounce(@showInfoBox))
-    google.maps.event.addListener(@marker, 'mouseout', _.debounce(@hideInfoBox))
+    # create marker object
+    @marker = new google.maps.Marker(markerOpts)
+
+    # initialize infoBox
+    if @infoBoxOpts
+      @infoBox = new InfoBox(@infoBoxOpts)
+      google.maps.event.addListener(@marker, 'mouseover', _.debounce(@showInfoBox))
+      google.maps.event.addListener(@marker, 'mouseout', _.debounce(@hideInfoBox))
 
   close: =>
     google.maps.event.clearListeners(@marker, 'mouseover')
@@ -64,7 +69,7 @@ class Backbone.Widgets.MapMarker extends Backbone.View
     super()
 
   showInfoBox: (event) =>
-    @infobox.open(@gmap, @marker)
+    @infoBox.open(@map.getGmap(), @marker)
 
   hideInfoBox: =>
-    @infobox.close()
+    @infoBox.close()
