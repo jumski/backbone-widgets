@@ -1,6 +1,7 @@
 #= require backbone
-#= require backbone-forms
-#= require backbone-forms-bootstrap
+#= require vendor/backbone-forms
+#= require vendor/backbone-forms-bootstrap
+#= require vendor/backbone.bootstrap-modal
 #= require_self
 #= require_tree ./
 
