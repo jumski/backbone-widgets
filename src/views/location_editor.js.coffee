@@ -1,5 +1,3 @@
-#= require jquery.geocomplete
-
 class Backbone.Widgets.LocationEditor extends Backbone.Form.editors.Base
   tagName: 'div'
   defaultValue: ''
