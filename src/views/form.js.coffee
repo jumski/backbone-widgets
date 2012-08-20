@@ -5,7 +5,10 @@ class Backbone.Widgets.Form extends Backbone.Form
   initialize: (options = {button: {}}) =>
     # hack !
     if @schema
-      options.schema = @schema
+      if @schema.call
+        options.schema = @schema()
+      else
+        options.schema = @schema
 
     super(options)
     @button = new Backbone.Widgets.AnimatedButton options.button
