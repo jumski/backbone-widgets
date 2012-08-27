@@ -10,6 +10,9 @@ class Backbone.Widgets.Form extends Backbone.Form
       else
         options.schema = @schema
 
+    if @template
+      options.template = @template
+
     super(options)
     @button = new Backbone.Widgets.AnimatedButton options.button
 
