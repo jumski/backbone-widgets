@@ -16,7 +16,6 @@ class Backbone.Widgets.MapMarker extends Backbone.View
     enableEventPropagation: false
 
   initialize: (opts) =>
-    @title = opts.title
     @lat   = opts.lat
     @lng   = opts.lng
     @map   = opts.map
@@ -33,7 +32,6 @@ class Backbone.Widgets.MapMarker extends Backbone.View
     markerOpts =
       position: new google.maps.LatLng(@lat, @lng)
       map: @map.getGmap()
-      title: @title
 
     # initialize image/shadow
     if @iconOpts
