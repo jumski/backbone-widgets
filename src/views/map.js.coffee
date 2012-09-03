@@ -60,8 +60,8 @@ class Backbone.Widgets.Map extends Backbone.View
 
   getGmap: => @gmap
 
-  focusOnMarker: (announcementLocation) =>
-    @getGmap().panTo(new google.maps.LatLng(announcementLocation.latitude, announcementLocation.longitude))
+  focusOnMarker: (lat, lng) =>
+    @getGmap().panTo(new google.maps.LatLng(lat, lng))
 
 
 
