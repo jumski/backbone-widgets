@@ -55,6 +55,34 @@ class Backbone.Widgets.Form extends Backbone.Form
     regexp: /^\d+([,\.]\d{0,2})?$/
     message: I18n.t('validaton_errors.provide_valid_number')
 
+  @validateGreaterThan: (number) ->
+    (value, formValues) ->
+      return if parseFloat(value) > parseFloat(number)
+
+      type: 'greaterThan'
+      message: I18n.t('validation_errors.expects_greater_than', number: number)
+
+  @validateLessThan: (number) ->
+    (value, formValues) ->
+      return if parseFloat(value) < parseFloat(number)
+
+      type: 'lessThan'
+      message: I18n.t('validation_errors.expects_less_than', number: number)
+
+  @validateGreaterThanOrEqualTo: (number) ->
+    (value, formValues) ->
+      return if parseFloat(value) >= parseFloat(number)
+
+      type: 'greaterThanOrEqualTo'
+      message: I18n.t('validation_errors.expects_greater_than_or_equal_to', number: number)
+
+  @validateLessThanOrEqualTo: (number) ->
+    (value, formValues) ->
+      return if parseFloat(value) <= parseFloat(number)
+
+      type: 'lessThanOrEqualTo'
+      message: I18n.t('validation_errors.expects_less_than_or_equal_to', number: number)
+
   @validateUniquenessOfEmail: ->
     (email, formValues) ->
       console.log formValues
@@ -65,7 +93,10 @@ class Backbone.Widgets.Form extends Backbone.Form
         async: false
 
       unless response.status == 200
-        type: 'unique_email'
+        type: 'uniqueEmail'
         message: I18n.t('errors.messages.email_has_been_taken')
+
+  @validateMultiple: (validators...) ->
+
 
 
