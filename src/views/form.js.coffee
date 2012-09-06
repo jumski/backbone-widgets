@@ -48,12 +48,12 @@ class Backbone.Widgets.Form extends Backbone.Form
   @validateLength: (min, max) ->
     type: 'regexp'
     regexp: new RegExp("^.{#{min},#{max}}$")
-    message: I18n.t('validaton_errors.length_not_matched', {min: min, max: max})
+    message: I18n.t('validation_errors.length_not_matched', {min: min, max: max})
 
   @validateNumericality: ->
     type: 'regexp'
     regexp: /^\d+([,\.]\d{0,2})?$/
-    message: I18n.t('validaton_errors.provide_valid_number')
+    message: I18n.t('validation_errors.provide_valid_number')
 
   @validateGreaterThan: (number) ->
     (value, formValues) ->
