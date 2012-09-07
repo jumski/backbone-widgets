@@ -52,7 +52,7 @@ class Backbone.Widgets.Form extends Backbone.Form
 
   @validateNumericality: ->
     type: 'regexp'
-    regexp: /^\d+([,\.]\d{0,2})?$/
+    regexp: /^-?\d+([,\.]\d{0,2})?$/
     message: I18n.t('validation_errors.provide_valid_number')
 
   @validateGreaterThan: (number) ->
