@@ -28,17 +28,9 @@ class Backbone.Widgets.MapMarker extends Backbone.View
       if opts.shadow
         @shadowOpts = _.extend({}, @shadowDefaults, opts.shadow)
 
-    @infoBoxOpts = opts.infoBox
-
-  getInfoBoxOpts: =>
-    opts = _.extend({}, @infoBoxDefaults, @infoBoxOpts)
-
-    if @map.pinnedInfoBox
-      opts.content = @infoBoxOpts.pinnedContent
-    else
-      opts.content = @infoBoxOpts.unpinnedContent
-
-    opts
+    if opts.infoBox
+      @infoBoxOpts = _.extend({}, @infoBoxDefaults, opts.infoBox)
+      @infoBoxOpts.content = opts.infoBox.unpinnedContent
 
   render: =>
     markerOpts =
@@ -68,8 +60,7 @@ class Backbone.Widgets.MapMarker extends Backbone.View
 
     # initialize infoBox
     if @infoBoxOpts
-      opts = @getInfoBoxOpts()
-      @infoBox = new InfoBox(opts)
+      @infoBox = new InfoBox(@infoBoxOpts)
       google.maps.event.addListener(@marker, 'click', @pinOnMap)
       google.maps.event.addListener(@marker, 'mouseover', @onMouseOver)
       google.maps.event.addListener(@marker, 'mouseout', @onMouseOut)
