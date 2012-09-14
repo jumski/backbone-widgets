@@ -15,8 +15,6 @@ class Backbone.Widgets.MapMarker extends Backbone.View
     isHidden: false
     enableEventPropagation: false
 
-  infoBoxPinned: false
-
   initialize: (opts) =>
     @title = opts.title
     @lat   = opts.lat
@@ -28,14 +26,25 @@ class Backbone.Widgets.MapMarker extends Backbone.View
       if opts.shadow
         @shadowOpts = _.extend({}, @shadowDefaults, opts.shadow)
 
-    if opts.infoBox
-      @infoBoxOpts = _.extend({}, @infoBoxDefaults, opts.infoBox)
+    @infoBoxOpts = opts.infoBox
+
+  getInfoBoxOpts: =>
+    opts = _.extend({}, @infoBoxDefaults, @infoBoxOpts)
+
+    if @map.isInfoBoxPinned
+      opts.content = @infoBoxOpts.pinnedContent
+    else
+      opts.content = @infoBoxOpts.unpinnedContent
+
+    opts
 
   render: =>
+    @closeMarker() if @marker
+
     markerOpts =
-      position: new google.maps.LatLng(@lat, @lng)
       map: @map.getGmap()
       title: @title
+      position: new google.maps.LatLng(@lat, @lng)
 
     # initialize image/shadow
     if @iconOpts
@@ -59,28 +68,34 @@ class Backbone.Widgets.MapMarker extends Backbone.View
 
     # initialize infoBox
     if @infoBoxOpts
-      @infoBox = new InfoBox(@infoBoxOpts)
+      opts = @getInfoBoxOpts()
+      @infoBox = new InfoBox(opts)
       google.maps.event.addListener(@marker, 'click', @toggleInfoBoxPinned)
       google.maps.event.addListener(@marker, 'mouseover', @onMouseOver)
       google.maps.event.addListener(@marker, 'mouseout', @onMouseOut)
 
+  closeMarker: =>
+    google.maps.event.clearListeners(@marker, 'click')
+    google.maps.event.clearListeners(@marker, 'mouseover')
+    google.maps.event.clearListeners(@marker, 'mouseout')
+    @infoBox = null
+    @marker.setMap(null)
+    @marker = null
+
   onMouseOver: =>
-    return if @map.infoBoxPinned
+    return if @map.isInfoBoxPinned
     @showInfoBox()
 
   onMouseOut: =>
-    return if @map.infoBoxPinned
+    return if @map.isInfoBoxPinned
     @hideInfoBox()
 
   toggleInfoBoxPinned: =>
-    @map.infoBoxPinned = ! @map.infoBoxPinned
-    console.log "pinned = #{@map.infoBoxPinned}"
+    @map.isInfoBoxPinned = ! @map.isInfoBoxPinned
+    @render()
 
   close: =>
-    google.maps.event.clearListeners(@marker, 'mouseover')
-    google.maps.event.clearListeners(@marker, 'mouseout')
-    @marker.setMap(null)
-    @marker = null
+    @closeMarker()
     super()
 
   showInfoBox: (event) =>
