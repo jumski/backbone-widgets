@@ -15,6 +15,8 @@ class Backbone.Widgets.MapMarker extends Backbone.View
     isHidden: false
     enableEventPropagation: false
 
+  pinned: false
+
   initialize: (opts) =>
     @title = opts.title
     @lat   = opts.lat
@@ -31,7 +33,7 @@ class Backbone.Widgets.MapMarker extends Backbone.View
   getInfoBoxOpts: =>
     opts = _.extend({}, @infoBoxDefaults, @infoBoxOpts)
 
-    if @map.isInfoBoxPinned
+    if @map.pinnedInfoBox
       opts.content = @infoBoxOpts.pinnedContent
     else
       opts.content = @infoBoxOpts.unpinnedContent
@@ -68,7 +70,7 @@ class Backbone.Widgets.MapMarker extends Backbone.View
     if @infoBoxOpts
       opts = @getInfoBoxOpts()
       @infoBox = new InfoBox(opts)
-      google.maps.event.addListener(@marker, 'click', @toggleInfoBoxPinned)
+      google.maps.event.addListener(@marker, 'click', @pinOnMap)
       google.maps.event.addListener(@marker, 'mouseover', @onMouseOver)
       google.maps.event.addListener(@marker, 'mouseout', @onMouseOut)
 
@@ -82,20 +84,25 @@ class Backbone.Widgets.MapMarker extends Backbone.View
     delete @marker
 
   onMouseOver: =>
-    return if @map.isInfoBoxPinned
+    return if @map.pinnedInfoBox
     @showInfoBox()
 
   onMouseOut: =>
-    return if @map.isInfoBoxPinned
+    return if @map.pinnedInfoBox
     @hideInfoBox()
 
-  toggleInfoBoxPinned: =>
-    @map.isInfoBoxPinned = ! @map.isInfoBoxPinned
+  pinOnMap: =>
+    return if @pinned
 
-    if @map.isInfoBoxPinned
-      @infoBox.setContent @getInfoBoxOpts().content
-    else
-      @infoBox.setContent @getInfoBoxOpts().content
+    @map.pinMarker(@)
+
+  pin: =>
+    @pinned = true
+    @infoBox.setContent @getInfoBoxOpts().pinnedContent
+
+  unpin: =>
+    @pinned = false
+    @infoBox.setContent @getInfoBoxOpts().unpinnedContent
 
   close: =>
     @closeMarker()

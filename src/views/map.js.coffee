@@ -3,7 +3,7 @@ class Backbone.Widgets.Map extends Backbone.View
   className: 'map'
 
   markers: []
-  isInfoBoxPinned: false
+  pinnedMarker: null
 
   initialize: (opts) =>
     @lat = opts.lat
@@ -43,6 +43,13 @@ class Backbone.Widgets.Map extends Backbone.View
     marker = new Backbone.Widgets.MapMarker(markerOpts)
     marker.render()
     @markers.push marker
+
+  pinMarker: (marker) =>
+    if @pinnedMarker
+      @pinnedMarker.unpin()
+
+    @pinnedMarker = marker
+    @pinnedMarker.pin()
 
   getBounds: =>
     bounds = @gmap.getBounds()
