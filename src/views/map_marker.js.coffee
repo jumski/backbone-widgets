@@ -39,8 +39,6 @@ class Backbone.Widgets.MapMarker extends Backbone.View
     opts
 
   render: =>
-    @closeMarker() if @marker
-
     markerOpts =
       map: @map.getGmap()
       title: @title
@@ -78,9 +76,10 @@ class Backbone.Widgets.MapMarker extends Backbone.View
     google.maps.event.clearListeners(@marker, 'click')
     google.maps.event.clearListeners(@marker, 'mouseover')
     google.maps.event.clearListeners(@marker, 'mouseout')
-    @infoBox = null
+
     @marker.setMap(null)
-    @marker = null
+    delete @infoBox
+    delete @marker
 
   onMouseOver: =>
     return if @map.isInfoBoxPinned
@@ -92,7 +91,11 @@ class Backbone.Widgets.MapMarker extends Backbone.View
 
   toggleInfoBoxPinned: =>
     @map.isInfoBoxPinned = ! @map.isInfoBoxPinned
-    @render()
+
+    if @map.isInfoBoxPinned
+      @infoBox.setContent @getInfoBoxOpts().content
+    else
+      @infoBox.setContent @getInfoBoxOpts().content
 
   close: =>
     @closeMarker()
