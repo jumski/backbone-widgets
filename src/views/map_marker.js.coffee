@@ -29,8 +29,15 @@ class Backbone.Widgets.MapMarker extends Backbone.View
         @shadowOpts = _.extend({}, @shadowDefaults, opts.shadow)
 
     if opts.infoBox
+      opts = opts.infoBox
+      @pinnedContent = opts.pinnedContent
+      @unpinnedContent = opts.unpinnedContent
+
+      delete opts.pinnedContent
+      delete opts.unpinnedContent
+
       @infoBoxOpts = _.extend({}, @infoBoxDefaults, opts.infoBox)
-      @infoBoxOpts.content = opts.infoBox.unpinnedContent
+      @infoBoxOpts.content = @unpinnedContent
 
   render: =>
     markerOpts =
@@ -89,11 +96,11 @@ class Backbone.Widgets.MapMarker extends Backbone.View
 
   pin: =>
     @pinned = true
-    @infoBox.setContent @getInfoBoxOpts().pinnedContent
+    @infoBox.setContent @pinnedContent
 
   unpin: =>
     @pinned = false
-    @infoBox.setContent @getInfoBoxOpts().unpinnedContent
+    @infoBox.setContent @unpinnedContent
 
   close: =>
     @closeMarker()
