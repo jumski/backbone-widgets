@@ -82,11 +82,11 @@ class Backbone.Widgets.MapMarker extends Backbone.View
     delete @marker
 
   onMouseOver: =>
-    return if @map.pinnedInfoBox
+    return if @pinned
     @showInfoBox()
 
   onMouseOut: =>
-    return if @map.pinnedInfoBox
+    return if @pinned
     @hideInfoBox()
 
   pinOnMap: =>
@@ -101,6 +101,7 @@ class Backbone.Widgets.MapMarker extends Backbone.View
   unpin: =>
     @pinned = false
     @infoBox.setContent @unpinnedContent
+    @infoBox.close()
 
   close: =>
     @closeMarker()
