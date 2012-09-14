@@ -3,6 +3,7 @@ class Backbone.Widgets.Map extends Backbone.View
   className: 'map'
 
   markers: []
+  infoBoxPinned: false
 
   initialize: (opts) =>
     @lat = opts.lat
