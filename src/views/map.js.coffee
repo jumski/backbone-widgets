@@ -53,6 +53,7 @@ class Backbone.Widgets.Map extends Backbone.View
   unpinMarker: =>
     if @pinnedMarker
       @pinnedMarker.unpin()
+      delete @pinnedMarker
 
   getBounds: =>
     bounds = @gmap.getBounds()

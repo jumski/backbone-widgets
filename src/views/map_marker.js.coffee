@@ -14,6 +14,7 @@ class Backbone.Widgets.MapMarker extends Backbone.View
     zIndex: null
     isHidden: false
     enableEventPropagation: false
+    pane: 'floatPane'
 
   pinned: false
 
@@ -68,6 +69,8 @@ class Backbone.Widgets.MapMarker extends Backbone.View
     # initialize infoBox
     if @infoBoxOpts
       @infoBox = new InfoBox(@infoBoxOpts)
+      google.maps.event.addListener(@infoBox, 'domready', @closeInfoBox)
+
       google.maps.event.addListener(@marker, 'click', @pinOnMap)
       google.maps.event.addListener(@marker, 'mouseover', @onMouseOver)
       google.maps.event.addListener(@marker, 'mouseout', @onMouseOut)
@@ -80,6 +83,10 @@ class Backbone.Widgets.MapMarker extends Backbone.View
     @marker.setMap(null)
     delete @infoBox
     delete @marker
+
+  closeInfoBox: (event) =>
+    $('.listing-popup-close', @infoBox.div_).live 'click',  =>
+      @map.unpinMarker()
 
   onMouseOver: =>
     return if @pinned
