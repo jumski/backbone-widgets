@@ -45,11 +45,14 @@ class Backbone.Widgets.Map extends Backbone.View
     @markers.push marker
 
   pinMarker: (marker) =>
-    if @pinnedMarker
-      @pinnedMarker.unpin()
+    @unpinMarker()
 
     @pinnedMarker = marker
     @pinnedMarker.pin()
+
+  unpinMarker: =>
+    if @pinnedMarker
+      @pinnedMarker.unpin()
 
   getBounds: =>
     bounds = @gmap.getBounds()
