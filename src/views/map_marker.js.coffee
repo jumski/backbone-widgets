@@ -33,9 +33,11 @@ class Backbone.Widgets.MapMarker extends Backbone.View
       opts = opts.infoBox
       @pinnedContent = opts.pinnedContent
       @unpinnedContent = opts.unpinnedContent
+      @closeButtonSelector = opts.closeButtonSelector
 
       delete opts.pinnedContent
       delete opts.unpinnedContent
+      delete opts.closeButtonSelector
 
       @infoBoxOpts = _.extend({}, @infoBoxDefaults, opts.infoBox)
       @infoBoxOpts.content = @unpinnedContent
@@ -85,7 +87,7 @@ class Backbone.Widgets.MapMarker extends Backbone.View
     delete @marker
 
   closeInfoBox: (event) =>
-    $('.listing-popup-close', @infoBox.div_).live 'click',  =>
+    $(@closeButtonSelector, @infoBox.div_).live 'click', =>
       @map.unpinMarker()
 
   onMouseOver: =>
