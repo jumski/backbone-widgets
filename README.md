@@ -1,7 +1,5 @@
 backbone-widgets
 ================
 
-Reusable BackboneJS components
-
-!!! WORK IN PROGRESS !!!
-!!!! NOT USABLE YET !!!!
+*PROJECT IS DEAD*
+and btw, it was a mess :0
